@@ -30,6 +30,18 @@ export class Tokens {
   protected readonly shadows = [1, 2, 3, 4];
   protected readonly sizes = ['xs', 'sm', 'md', 'lg', 'xl'];
   protected readonly durations = ['fast', 'normal', 'slow'];
+  protected readonly easings = ['standard', 'emphasized', 'spring'];
+  protected readonly fontWeights = ['regular', 'medium', 'bold'];
+  protected readonly lineHeights = ['tight', 'normal'];
+  protected readonly semanticGroups = [
+    {
+      title: 'Surfaces',
+      tokens: ['background', 'surface', 'surface-raised', 'surface-overlay', 'scrim'],
+    },
+    { title: 'Text', tokens: ['text', 'text-muted', 'text-disabled', 'text-inverse'] },
+    { title: 'Borders', tokens: ['border', 'border-strong', 'border-disabled'] },
+    { title: 'Interaction', tokens: ['focus-ring', 'selection'] },
+  ];
 
   /** Contrast of each role pair, recalculated when the resolved theme changes. */
   protected readonly roles = computed(() => {

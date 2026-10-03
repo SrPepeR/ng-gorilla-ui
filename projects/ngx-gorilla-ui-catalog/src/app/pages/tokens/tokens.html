@@ -40,11 +40,36 @@
   </div>
 </section>
 
+<section aria-labelledby="semantic-title">
+  <h2 id="semantic-title">Surfaces, text, borders and interaction</h2>
+  <div class="semantic">
+    @for (group of semanticGroups; track group.title) {
+      <div>
+        <h3>{{ group.title }}</h3>
+        <ul class="scale">
+          @for (token of group.tokens; track token) {
+            <li>
+              <span
+                class="chip"
+                [style.background]="'var(--gorilla-' + token + ')'"
+                aria-hidden="true"
+              ></span>
+              <code>--gorilla-{{ token }}</code>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+</section>
+
 <section aria-labelledby="palettes-title">
   <h2 id="palettes-title">Palettes</h2>
   <p>
     Twelve steps per tone: 1-2 backgrounds, 3-5 subtle backgrounds, 6-8 borders, 9 the solid color
-    (the same in both themes), 10 its hover, 11 low-contrast text and 12 high-contrast text.
+    (the same in both themes), 10 its hover, 11 low-contrast text and 12 high-contrast text. Each
+    tone also has <code>-active</code> (the pressed solid) and <code>-contrast</code> (the text on
+    the solid).
   </p>
   <div class="palettes">
     @for (tone of tones; track tone) {
@@ -71,6 +96,7 @@
 
   <h3>Spacing</h3>
   <ul class="scale">
+    <li><code>--gorilla-space-0</code> <span>0</span></li>
     @for (space of spaces; track space) {
       <li>
         <code>--gorilla-space-{{ space }}</code>
@@ -97,7 +123,35 @@
     }
   </ul>
 
+  <h3>Typography</h3>
+  <ul class="scale">
+    <li>
+      <code>--gorilla-font-family</code>
+      <span>The system font, no third-party requests</span>
+    </li>
+    @for (weight of fontWeights; track weight) {
+      <li>
+        <code>--gorilla-font-weight-{{ weight }}</code>
+        <span [style.font-weight]="'var(--gorilla-font-weight-' + weight + ')'"
+          >The quick gorilla</span
+        >
+      </li>
+    }
+    @for (lineHeight of lineHeights; track lineHeight) {
+      <li>
+        <code>--gorilla-line-height-{{ lineHeight }}</code>
+        <span [style.line-height]="'var(--gorilla-line-height-' + lineHeight + ')'"
+          >Two lines of text<br />to show the leading</span
+        >
+      </li>
+    }
+  </ul>
+
   <h3>Font sizes and control heights</h3>
+  <p>
+    <code>--gorilla-font-size-*</code> and <code>--gorilla-control-height-*</code>, from
+    <code>xs</code> to <code>xl</code>.
+  </p>
   <ul class="scale">
     @for (size of sizes; track size) {
       <li>
@@ -121,6 +175,15 @@
     @for (duration of durations; track duration) {
       <li [style.--duration]="'var(--gorilla-duration-' + duration + ')'">
         <code>--gorilla-duration-{{ duration }}</code>
+        <span class="track"><span class="dot"></span></span>
+      </li>
+    }
+    @for (easing of easings; track easing) {
+      <li
+        [style.--duration]="'var(--gorilla-duration-slow)'"
+        [style.--easing]="'var(--gorilla-easing-' + easing + ')'"
+      >
+        <code>--gorilla-easing-{{ easing }}</code>
         <span class="track"><span class="dot"></span></span>
       </li>
     }

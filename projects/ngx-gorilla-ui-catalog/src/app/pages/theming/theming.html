@@ -43,7 +43,7 @@
   <p>
     The tokens live in the <code>gorilla</code> cascade layer with <code>:where()</code> selectors,
     so any rule of your app wins without <code>!important</code>, for the whole app or for a part of
-    it. See every token on the <a routerLink="/tokens">Tokens</a> page.
+    it. Every public token is listed on the <a routerLink="/tokens">Tokens</a> page.
   </p>
   <pre><code>{{ overrideSnippet }}</code></pre>
 </section>
@@ -54,6 +54,10 @@
     <li>
       <strong>Reduced motion:</strong> every <code>--gorilla-duration-*</code> token becomes
       <code>0s</code>.
+    </li>
+    <li>
+      <strong>Reduced transparency:</strong> translucent layers such as the scrim become nearly
+      opaque.
     </li>
     <li><strong>More contrast:</strong> muted text and borders switch to their strongest step.</li>
     <li>

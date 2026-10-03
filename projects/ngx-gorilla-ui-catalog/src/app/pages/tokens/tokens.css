@@ -31,6 +31,23 @@ section {
     color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
+.semantic {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--gorilla-space-4);
+
+  h3 {
+    font-size: var(--gorilla-font-size-md);
+  }
+}
+
+.chip {
+  inline-size: var(--gorilla-space-6);
+  block-size: var(--gorilla-space-6);
+  border: 1px solid var(--gorilla-border-strong);
+  border-radius: var(--gorilla-radius-sm);
+}
+
 .palette {
   display: grid;
   grid-template-columns: 5rem 1fr;
@@ -120,7 +137,7 @@ section {
   aspect-ratio: 1;
   border-radius: var(--gorilla-radius-full);
   background: var(--gorilla-primary-solid);
-  transition: transform var(--duration) var(--gorilla-easing-standard);
+  transition: transform var(--duration) var(--easing, var(--gorilla-easing-standard));
 }
 
 .motion li:hover .dot {
