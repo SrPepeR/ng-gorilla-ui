@@ -29,6 +29,7 @@ section {
   font-weight: var(--gorilla-font-weight-medium);
   transition:
     background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
     color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
@@ -139,6 +140,7 @@ section {
   flex: 1;
   max-inline-size: 16rem;
   block-size: var(--gorilla-space-4);
+  container-type: inline-size;
   border-radius: var(--gorilla-radius-full);
   background: var(--gorilla-neutral-subtle);
   transition: background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
@@ -155,6 +157,15 @@ section {
     background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
-.motion li:hover .dot {
-  transform: translateX(15rem);
+.play {
+  display: inline-flex;
+  gap: var(--gorilla-space-1);
+  align-items: center;
+  font-size: var(--gorilla-font-size-sm);
+  cursor: pointer;
+}
+
+/* The dot travels the real width of its track, so it never overflows on narrow screens. */
+.motion li:is(:hover, :has(.play input:checked)) .dot {
+  transform: translateX(calc(100cqi - 100%));
 }

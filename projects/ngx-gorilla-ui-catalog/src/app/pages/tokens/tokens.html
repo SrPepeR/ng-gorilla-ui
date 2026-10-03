@@ -172,14 +172,18 @@
 
   <h3>Motion</h3>
   <p>
-    Durations become <code>0s</code> when the system asks for reduced motion. Hover a row to play
-    it.
+    Durations become <code>0s</code> when the system asks for reduced motion. Hover a row or check
+    its <em>Play</em> box to run it.
   </p>
   <ul class="scale motion">
     @for (duration of durations; track duration) {
       <li [style.--duration]="'var(--gorilla-duration-' + duration + ')'">
         <code>--gorilla-duration-{{ duration }}</code>
         <span class="track"><span class="dot"></span></span>
+        <label class="play">
+          <input type="checkbox" />
+          Play <span class="visually-hidden">--gorilla-duration-{{ duration }}</span>
+        </label>
       </li>
     }
     @for (easing of easings; track easing) {
@@ -189,6 +193,10 @@
       >
         <code>--gorilla-easing-{{ easing }}</code>
         <span class="track"><span class="dot"></span></span>
+        <label class="play">
+          <input type="checkbox" />
+          Play <span class="visually-hidden">--gorilla-easing-{{ easing }}</span>
+        </label>
       </li>
     }
   </ul>
