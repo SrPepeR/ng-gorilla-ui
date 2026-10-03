@@ -44,7 +44,7 @@ const DARK_QUERY = '(prefers-color-scheme: dark)';
  * It writes `data-theme` and `color-scheme` on `<html>`, which the tokens of
  * `ngx-gorilla-ui/styles/tokens.css` read through `light-dark()`. The user's choice is stored in
  * `localStorage`; while it is `system`, the theme follows `prefers-color-scheme` changes.
- * On the server it never touches `localStorage` nor `matchMedia`.
+ * On the server it never touches the document, `localStorage` nor `matchMedia`.
  */
 @Injectable({ providedIn: 'root' })
 export class GorillaTheme {
@@ -88,6 +88,9 @@ export class GorillaTheme {
   }
 
   private applyToDocument(mode: GorillaThemeMode): void {
+    if (!this.window) {
+      return;
+    }
     const root = this.document.documentElement;
     if (mode === 'system') {
       root.removeAttribute('data-theme');

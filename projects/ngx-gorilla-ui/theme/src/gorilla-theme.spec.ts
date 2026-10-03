@@ -122,7 +122,7 @@ describe('GorillaTheme', () => {
     expect(root.style.getPropertyValue('color-scheme')).toBe('light');
   });
 
-  it('does not touch `localStorage` nor `matchMedia` on the server platform (R-06)', () => {
+  it('does not touch the document, `localStorage` nor `matchMedia` on the server platform (R-06)', () => {
     const { matchMedia } = fakeSystemTheme(true);
     const getItem = vi.spyOn(Storage.prototype, 'getItem');
     const setItem = vi.spyOn(Storage.prototype, 'setItem');
@@ -134,5 +134,6 @@ describe('GorillaTheme', () => {
     expect(matchMedia).not.toHaveBeenCalled();
     expect(getItem).not.toHaveBeenCalled();
     expect(setItem).not.toHaveBeenCalled();
+    expect(root.hasAttribute('data-theme')).toBe(false);
   });
 });
