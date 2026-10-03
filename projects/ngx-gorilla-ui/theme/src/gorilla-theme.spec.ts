@@ -57,6 +57,15 @@ describe('GorillaTheme', () => {
     expect(theme.resolvedTheme()).toBe('dark');
   });
 
+  it('keeps the defaults when options are explicitly `undefined`', () => {
+    fakeSystemTheme(false);
+    const theme = createTheme({ defaultTheme: undefined, storageKey: undefined });
+
+    expect(theme.theme()).toBe('system');
+    theme.setTheme('dark');
+    expect(localStorage.getItem(STORAGE_KEY)).toBe('dark');
+  });
+
   it('restores the stored choice over the system preference (E-11)', () => {
     fakeSystemTheme(true);
     localStorage.setItem(STORAGE_KEY, 'light');

@@ -161,6 +161,56 @@ describe('tokens.css', () => {
     expect(alpha()).toBeGreaterThanOrEqual(0.85);
   });
 
+  for (const theme of THEMES) {
+    it(`muted text, borders and on-subtle roles reach their strongest step under \`prefers-contrast: more\` (${theme})`, async () => {
+      root.setAttribute('data-theme', theme);
+      await cdp().send('Emulation.setEmulatedMedia', {
+        features: [{ name: 'prefers-contrast', value: 'more' }],
+      });
+
+      const strongest: [string, string][] = [
+        ['--gorilla-text-muted', '--gorilla-gray-12'],
+        ['--gorilla-border', '--gorilla-gray-11'],
+        ['--gorilla-border-strong', '--gorilla-gray-12'],
+        ['--gorilla-primary-on-subtle', '--gorilla-cyan-12'],
+        ['--gorilla-secondary-on-subtle', '--gorilla-violet-12'],
+        ['--gorilla-tertiary-on-subtle', '--gorilla-magenta-12'],
+        ['--gorilla-neutral-on-subtle', '--gorilla-gray-12'],
+        ['--gorilla-success-on-subtle', '--gorilla-green-12'],
+        ['--gorilla-warning-on-subtle', '--gorilla-amber-12'],
+        ['--gorilla-danger-on-subtle', '--gorilla-red-12'],
+        ['--gorilla-info-on-subtle', '--gorilla-blue-12'],
+      ];
+      for (const [token, step] of strongest) {
+        expect(resolveColor(token), token).toEqual(resolveColor(step));
+      }
+    });
+  }
+
+  it('surfaces, text, borders, focus and selection use system colors under `forced-colors: active`', async () => {
+    await cdp().send('Emulation.setEmulatedMedia', {
+      features: [{ name: 'forced-colors', value: 'active' }],
+    });
+
+    const systemColors: Record<string, string> = {
+      '--gorilla-background': 'Canvas',
+      '--gorilla-surface': 'Canvas',
+      '--gorilla-surface-raised': 'Canvas',
+      '--gorilla-surface-overlay': 'Canvas',
+      '--gorilla-text': 'CanvasText',
+      '--gorilla-text-muted': 'CanvasText',
+      '--gorilla-text-disabled': 'GrayText',
+      '--gorilla-border': 'CanvasText',
+      '--gorilla-border-strong': 'CanvasText',
+      '--gorilla-border-disabled': 'GrayText',
+      '--gorilla-focus-ring': 'Highlight',
+      '--gorilla-selection': 'Highlight',
+    };
+    for (const [token, color] of Object.entries(systemColors)) {
+      expect(rootValue(token), token).toBe(color);
+    }
+  });
+
   it('an unlayered app rule overrides a token without `!important`', () => {
     const appStyle = document.createElement('style');
     appStyle.textContent = ':root { --gorilla-primary-solid: rgb(1, 2, 3); }';

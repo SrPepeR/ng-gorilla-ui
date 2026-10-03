@@ -129,7 +129,13 @@ export class GorillaTheme {
  */
 export function provideGorillaTheme(options: GorillaThemeOptions = {}): EnvironmentProviders {
   return makeEnvironmentProviders([
-    { provide: GORILLA_THEME_OPTIONS, useValue: { ...DEFAULT_OPTIONS, ...options } },
+    {
+      provide: GORILLA_THEME_OPTIONS,
+      useValue: {
+        defaultTheme: options.defaultTheme ?? DEFAULT_OPTIONS.defaultTheme,
+        storageKey: options.storageKey ?? DEFAULT_OPTIONS.storageKey,
+      },
+    },
     provideEnvironmentInitializer(() => inject(GorillaTheme)),
   ]);
 }
