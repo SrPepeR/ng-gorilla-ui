@@ -46,6 +46,9 @@ section {
   block-size: var(--gorilla-space-6);
   border: 1px solid var(--gorilla-border-strong);
   border-radius: var(--gorilla-radius-sm);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 .palette {
@@ -93,6 +96,7 @@ section {
   block-size: var(--gorilla-space-3);
   background: var(--gorilla-primary-solid);
   border-radius: var(--gorilla-radius-xs);
+  transition: background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 .tiles {
@@ -108,6 +112,10 @@ section {
   block-size: 5rem;
   background: var(--gorilla-primary-subtle);
   border: 1px solid var(--gorilla-primary-border);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    box-shadow var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 .raised {
@@ -120,6 +128,9 @@ section {
   inline-size: 4rem;
   border: 1px solid var(--gorilla-border-strong);
   border-radius: var(--gorilla-radius-sm);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 .track {
@@ -129,6 +140,7 @@ section {
   block-size: var(--gorilla-space-4);
   border-radius: var(--gorilla-radius-full);
   background: var(--gorilla-neutral-subtle);
+  transition: background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 .dot {
@@ -137,7 +149,9 @@ section {
   aspect-ratio: 1;
   border-radius: var(--gorilla-radius-full);
   background: var(--gorilla-primary-solid);
-  transition: transform var(--duration) var(--easing, var(--gorilla-easing-standard));
+  transition:
+    transform var(--duration) var(--easing, var(--gorilla-easing-standard)),
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 .motion li:hover .dot {

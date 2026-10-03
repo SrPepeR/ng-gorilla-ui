@@ -29,6 +29,7 @@ import { GorillaTheme, GorillaThemeMode } from 'ngx-gorilla-ui/theme';
       padding: var(--gorilla-space-1);
       border: 1px solid var(--gorilla-border);
       border-radius: var(--gorilla-radius-full);
+      transition: border-color var(--gorilla-duration-fast) var(--gorilla-easing-standard);
     }
 
     .option {

@@ -21,6 +21,7 @@ body {
 
 a {
   color: var(--gorilla-primary-on-subtle);
+  transition: color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 :focus-visible {

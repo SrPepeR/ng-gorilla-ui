@@ -130,6 +130,23 @@ describe('tokens.css', () => {
     });
   }
 
+  it('follows `prefers-color-scheme` when no `data-theme` is set', async () => {
+    const explicit: Record<string, [number, number, number]> = {};
+    for (const theme of THEMES) {
+      root.setAttribute('data-theme', theme);
+      explicit[theme] = resolveColor('--gorilla-background');
+    }
+    root.removeAttribute('data-theme');
+    expect(explicit['light']).not.toEqual(explicit['dark']);
+
+    for (const theme of THEMES) {
+      await cdp().send('Emulation.setEmulatedMedia', {
+        features: [{ name: 'prefers-color-scheme', value: theme }],
+      });
+      expect(resolveColor('--gorilla-background'), theme).toEqual(explicit[theme]);
+    }
+  });
+
   it('motion durations resolve to `0s` under `prefers-reduced-motion: reduce`', async () => {
     expect(rootValue('--gorilla-duration-normal')).toBe('200ms');
 

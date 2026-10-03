@@ -28,6 +28,7 @@
   align-items: center;
   padding: 1rem 1.5rem;
   border-block-end: 1px solid var(--gorilla-border);
+  transition: border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 .brand {

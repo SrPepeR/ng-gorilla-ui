@@ -10,6 +10,9 @@ pre {
   border-radius: var(--gorilla-radius-md);
   font-size: var(--gorilla-font-size-sm);
   line-height: var(--gorilla-line-height-normal);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 li {
