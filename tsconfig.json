@@ -9,7 +9,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "ngx-gorilla-ui": ["./dist/ngx-gorilla-ui"]
+      "ngx-gorilla-ui": ["./dist/ngx-gorilla-ui"],
+      "ngx-gorilla-ui/*": ["./dist/ngx-gorilla-ui/*"]
     },
     "skipLibCheck": true,
     "isolatedModules": true,

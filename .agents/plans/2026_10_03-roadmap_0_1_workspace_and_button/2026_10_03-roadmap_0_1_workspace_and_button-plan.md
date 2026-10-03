@@ -17,7 +17,7 @@ implemented_by:
     version: "5.5"
     reasoning_effort: "low"
 
-last_implementation_at: "2026-10-03T12:55:00Z"
+last_implementation_at: "2026-10-03T13:50:00Z"
 has_completed_all_phases: "false"
 ---
 
@@ -99,9 +99,10 @@ Sustituir el workspace de `ngx-monkey-ui` por uno nuevo en Angular 22 con la lib
   - stores the choice under the configured key when `setTheme()` is called (E-11).
   - follows `prefers-color-scheme` changes while the mode is `system` (E-11).
   - ignores `prefers-color-scheme` changes once the user picks `light` or `dark`.
-  - `setTheme('system')` removes `data-theme` and the stored choice.
+  - `setTheme('system')` removes `data-theme` and stores `system`.
+  - restores an explicit `system` choice over a fixed `defaultTheme`.
   - writes `data-theme` and `color-scheme` on `<html>`.
-  - does not touch `localStorage` nor `matchMedia` on the server platform (R-06).
+  - does not touch the document, `localStorage` nor `matchMedia` on the server platform (R-06).
 - `projects/ngx-gorilla-ui/styles/tokens.spec.ts` (tokens en navegador real):
   - defines every semantic color token in light and dark themes.
   - every role pair (`-solid`/`-on-solid`, `-subtle`/`-on-subtle`) and `surface`/`text` passes AA contrast in both themes.
@@ -177,15 +178,15 @@ Añade el tooling de calidad sobre el workspace vacío: Vitest en modo navegador
 
 Primer entry point real: los tokens en CSS y `GorillaTheme`. El catálogo muestra los tokens en los dos temas con un selector de tema, y permite revisar la paleta antes de construir el botón.
 
-- [ ] Crear la rama `feat/theme-tokens` desde `release/0.1.0`.
-- [ ] `styles/tokens.css` con la capa `@layer gorilla`: paletas primitivas de 12 pasos (gris neutro, cian, violeta y magenta desde los tonos claros de `MonkeyStyle`, y verde, ámbar, rojo y azul para los estados), roles semánticos con `light-dark()`, superficies, texto, bordes, interacción, escalas y movimiento, publicado como asset en `ng-package.json`.
-- [ ] Reglas de preferencias en los tokens: `prefers-reduced-motion` (duraciones a `0s`), `prefers-contrast: more` (bordes y texto reforzados) y `forced-colors` (colores del sistema).
-- [ ] Entry point `ngx-gorilla-ui/theme` con `GorillaTheme`, `provideGorillaTheme()` y sus tipos, sin acceso directo a `window`, `document` ni `localStorage` (`DOCUMENT`, `isPlatformBrowser`). Ajustar el target `test` de la librería (`include`) y `tsconfig.lib.json` para que cubran las carpetas de los entry points secundarios, que quedan fuera de `src/`.
-- [ ] Suites `gorilla-theme.spec.ts` y `tokens.spec.ts` con todos sus casos.
-- [ ] Catálogo: `provideGorillaTheme()`, selector `Light`/`Dark`/`System` en la cabecera y páginas `Theming` (cómo usar el tema y sobrescribir tokens) y `Tokens` (paletas, roles con su contraste, escalas).
-- [ ] Revisar con el usuario las paletas en el catálogo y ajustar los pasos que no pasen AA.
-- [ ] Marcar 1.1 y 1.2 en `docs/ROADMAP.md` y añadir la entrada en `CHANGELOG.md`.
-- [ ] Verify the changes in terms of typechecking, linting and tests using the project's verification command (`npm run verify`). Fix issues if any.
+- [x] Crear la rama `feat/theme-tokens` desde `release/0.1.0`.
+- [x] `styles/tokens.css` con la capa `@layer gorilla`: paletas primitivas de 12 pasos (gris neutro, cian, violeta y magenta desde los tonos claros de `MonkeyStyle`, y verde, ámbar, rojo y azul para los estados), roles semánticos con `light-dark()`, superficies, texto, bordes, interacción, escalas y movimiento, publicado como asset en `ng-package.json`.
+- [x] Reglas de preferencias en los tokens: `prefers-reduced-motion` (duraciones a `0s`), `prefers-contrast: more` (bordes y texto reforzados) y `forced-colors` (colores del sistema).
+- [x] Entry point `ngx-gorilla-ui/theme` con `GorillaTheme`, `provideGorillaTheme()` y sus tipos, sin acceso directo a `window`, `document` ni `localStorage` (`DOCUMENT`, `isPlatformBrowser`). Ajustar el target `test` de la librería (`include`) y `tsconfig.lib.json` para que cubran las carpetas de los entry points secundarios, que quedan fuera de `src/`.
+- [x] Suites `gorilla-theme.spec.ts` y `tokens.spec.ts` con todos sus casos.
+- [x] Catálogo: `provideGorillaTheme()`, selector `Light`/`Dark`/`System` en la cabecera y páginas `Theming` (cómo usar el tema y sobrescribir tokens) y `Tokens` (paletas, roles con su contraste, escalas).
+- [ ] Revisar con el usuario las paletas en el catálogo y ajustar los pasos que no pasen AA. Las paletas se generan con `npm run tokens:palette` (`scripts/generate-palette.mjs`), que falla si un par no pasa AA.
+- [x] Marcar 1.1 y 1.2 en `docs/ROADMAP.md` y añadir la entrada en `CHANGELOG.md`.
+- [x] Verify the changes in terms of typechecking, linting and tests using the project's verification command (`npm run verify`). Fix issues if any.
 - [ ] STOP. Present the changes to the user for review and suggest pull request titles. Do NOT proceed to the next phase until the user explicitly asks.
 
 ### Fase 4: directiva de variante y botón `default`
@@ -263,6 +264,6 @@ Automatiza la publicación y deja `release/0.1.0` lista para la pull request hac
 
 ## Siguiente paso
 
-Implementar la fase 3: los tokens en CSS y `GorillaTheme`, con su página en el catálogo, en la rama `feat/theme-tokens` creada desde `release/0.1.0` una vez mergeada la fase 2.
+Cerrar la fase 3: que el usuario revise las paletas y los roles en la página `Tokens` del catálogo, en los dos temas, y ajustar lo que pida; después, la fase 4 (directiva de variante y botón `default`) en la rama `feat/button`.
 
-The gorilla moved into its new Angular 22 home, 🐢 💨 (Turbotuga™, [Codely](https://codely.com)'s mascot) carried the boxes, and a robot now inspects every room. 🏠 🦍 🐢 💨 🤖
+The gorilla moved into its new Angular 22 home, 🐢 💨 (Turbotuga™, [Codely](https://codely.com)'s mascot) carried the boxes, a robot inspects every room, and the walls just got painted in light and dark. 🏠 🦍 🐢 💨 🤖 🎨

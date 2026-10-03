@@ -3,5 +3,12 @@
   "dest": "../../dist/ngx-gorilla-ui",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": [
+    {
+      "input": "styles",
+      "glob": "*.css",
+      "output": "styles"
+    }
+  ]
 }

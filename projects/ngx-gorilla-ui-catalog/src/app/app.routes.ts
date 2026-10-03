@@ -7,5 +7,15 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/getting-started/getting-started').then((m) => m.GettingStarted),
   },
+  {
+    path: 'theming',
+    title: 'Theming · ngx-gorilla-ui',
+    loadComponent: () => import('./pages/theming/theming').then((m) => m.Theming),
+  },
+  {
+    path: 'tokens',
+    title: 'Tokens · ngx-gorilla-ui',
+    loadComponent: () => import('./pages/tokens/tokens').then((m) => m.Tokens),
+  },
   { path: '**', redirectTo: '' },
 ];

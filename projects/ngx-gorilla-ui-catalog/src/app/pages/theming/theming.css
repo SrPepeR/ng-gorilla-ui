@@ -1,0 +1,20 @@
+section {
+  margin-block-start: var(--gorilla-space-8);
+}
+
+pre {
+  overflow-x: auto;
+  padding: var(--gorilla-space-4);
+  background: var(--gorilla-surface-raised);
+  border: 1px solid var(--gorilla-border);
+  border-radius: var(--gorilla-radius-md);
+  font-size: var(--gorilla-font-size-sm);
+  line-height: var(--gorilla-line-height-normal);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+li {
+  margin-block-end: var(--gorilla-space-2);
+}

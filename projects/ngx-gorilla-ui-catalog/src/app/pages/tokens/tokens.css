@@ -1,0 +1,171 @@
+section {
+  margin-block-start: var(--gorilla-space-10);
+}
+
+.muted {
+  color: var(--gorilla-text-muted);
+  font-weight: var(--gorilla-font-weight-regular);
+  transition: color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.roles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: var(--gorilla-space-4);
+}
+
+.role h3 {
+  margin: 0 0 var(--gorilla-space-2);
+  font-size: var(--gorilla-font-size-md);
+}
+
+.sample {
+  display: flex;
+  justify-content: space-between;
+  margin-block-end: var(--gorilla-space-2);
+  padding: var(--gorilla-space-3);
+  border: 1px solid transparent;
+  border-radius: var(--gorilla-radius-md);
+  font-weight: var(--gorilla-font-weight-medium);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.semantic {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--gorilla-space-4);
+
+  h3 {
+    font-size: var(--gorilla-font-size-md);
+  }
+}
+
+.chip {
+  inline-size: var(--gorilla-space-6);
+  block-size: var(--gorilla-space-6);
+  border: 1px solid var(--gorilla-border-strong);
+  border-radius: var(--gorilla-radius-sm);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  align-items: center;
+  gap: var(--gorilla-space-3);
+  margin-block-end: var(--gorilla-space-2);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gorilla-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.swatch {
+  block-size: 2.25rem;
+  border-radius: var(--gorilla-radius-sm);
+  transition: background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.scale,
+.tiles {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scale li {
+  display: flex;
+  align-items: center;
+  gap: var(--gorilla-space-4);
+  margin-block-end: var(--gorilla-space-2);
+
+  code {
+    min-inline-size: 13rem;
+  }
+}
+
+.bar {
+  block-size: var(--gorilla-space-3);
+  background: var(--gorilla-primary-solid);
+  border-radius: var(--gorilla-radius-xs);
+  transition: background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gorilla-space-4);
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  inline-size: 5rem;
+  block-size: 5rem;
+  background: var(--gorilla-primary-subtle);
+  border: 1px solid var(--gorilla-primary-border);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    box-shadow var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.raised {
+  background: var(--gorilla-surface-raised);
+  border-color: var(--gorilla-border);
+  border-radius: var(--gorilla-radius-md);
+}
+
+.control {
+  inline-size: 4rem;
+  border: 1px solid var(--gorilla-border-strong);
+  border-radius: var(--gorilla-radius-sm);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.track {
+  position: relative;
+  flex: 1;
+  max-inline-size: 16rem;
+  block-size: var(--gorilla-space-4);
+  container-type: inline-size;
+  border-radius: var(--gorilla-radius-full);
+  background: var(--gorilla-neutral-subtle);
+  transition: background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.dot {
+  position: absolute;
+  inset-block: 0;
+  aspect-ratio: 1;
+  border-radius: var(--gorilla-radius-full);
+  background: var(--gorilla-primary-solid);
+  transition:
+    transform var(--duration) var(--easing, var(--gorilla-easing-standard)),
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.play {
+  display: inline-flex;
+  gap: var(--gorilla-space-1);
+  align-items: center;
+  font-size: var(--gorilla-font-size-sm);
+  cursor: pointer;
+}
+
+/* The dot travels the real width of its track, so it never overflows on narrow screens. */
+.motion li:is(:hover, :has(.play input:checked)) .dot {
+  transform: translateX(calc(100cqi - 100%));
+}

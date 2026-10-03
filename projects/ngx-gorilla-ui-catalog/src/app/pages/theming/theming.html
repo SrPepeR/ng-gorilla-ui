@@ -1,0 +1,69 @@
+<h1>Theming</h1>
+
+<p>
+  <code>ngx-gorilla-ui</code> ships a light and a dark theme built on CSS custom properties. Colors
+  use <code>light-dark()</code>, so the theme follows <code>color-scheme</code>: the system
+  preference by default, or a fixed choice set by <code>GorillaTheme</code>.
+</p>
+
+<section aria-labelledby="load-title">
+  <h2 id="load-title">1. Load the tokens</h2>
+  <p>
+    Add <code>tokens.css</code> to the <code>styles</code> of your application in
+    <code>angular.json</code>, before your own global styles.
+  </p>
+  <pre><code>{{ stylesSnippet }}</code></pre>
+</section>
+
+<section aria-labelledby="provide-title">
+  <h2 id="provide-title">2. Provide the theme</h2>
+  <p>
+    <code>provideGorillaTheme()</code> applies the theme as soon as the app starts. The default
+    theme is <code>system</code>, which follows <code>prefers-color-scheme</code> and its changes;
+    the user's choice is stored in <code>localStorage</code>. On the server nothing is read nor
+    stored.
+  </p>
+  <pre><code>{{ providerSnippet }}</code></pre>
+</section>
+
+<section aria-labelledby="switch-title">
+  <h2 id="switch-title">3. Let the user choose</h2>
+  <p>
+    <code>GorillaTheme</code> exposes the chosen mode (<code>theme</code>), the applied one
+    (<code>resolvedTheme</code>) and <code>setTheme()</code>. This page is using
+    <strong>{{ theme.theme() }}</strong
+    >, resolved to <strong>{{ theme.resolvedTheme() }}</strong
+    >.
+  </p>
+  <pre><code>{{ serviceSnippet }}</code></pre>
+</section>
+
+<section aria-labelledby="override-title">
+  <h2 id="override-title">4. Override any token</h2>
+  <p>
+    The tokens live in the <code>gorilla</code> cascade layer with <code>:where()</code> selectors,
+    so any rule of your app wins without <code>!important</code>, for the whole app or for a part of
+    it. The <a routerLink="/tokens">Tokens</a> page documents every token group and its naming
+    pattern, such as <code>--gorilla-&lt;role&gt;-solid-hover</code> or
+    <code>--gorilla-&lt;palette&gt;-&lt;step&gt;</code>.
+  </p>
+  <pre><code>{{ overrideSnippet }}</code></pre>
+</section>
+
+<section aria-labelledby="preferences-title">
+  <h2 id="preferences-title">User preferences</h2>
+  <ul>
+    <li>
+      <strong>Reduced motion:</strong> every <code>--gorilla-duration-*</code> token becomes
+      <code>0s</code>.
+    </li>
+    <li>
+      <strong>Reduced transparency:</strong> translucent layers such as the scrim become nearly
+      opaque.
+    </li>
+    <li><strong>More contrast:</strong> muted text and borders switch to their strongest step.</li>
+    <li>
+      <strong>Forced colors:</strong> surfaces, text, borders and focus use the system colors.
+    </li>
+  </ul>
+</section>

@@ -24,5 +24,12 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
-  "sideEffects": false
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    "./styles/tokens.css": {
+      "default": "./styles/tokens.css"
+    }
+  }
 }

@@ -9,10 +9,16 @@
   inset-inline-start: 1rem;
   inset-block-start: 1rem;
   padding: 0.5rem 1rem;
-  background: Canvas;
-  color: CanvasText;
+  background: var(--gorilla-surface-overlay);
+  color: var(--gorilla-text);
+  border-radius: var(--gorilla-radius-md);
+  box-shadow: var(--gorilla-shadow-3);
   transform: translateY(calc(-100% - 1.5rem));
-  transition: transform 150ms ease;
+  transition:
+    transform var(--gorilla-duration-fast) var(--gorilla-easing-standard),
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    box-shadow var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 
   &:focus {
     transform: none;
@@ -25,7 +31,8 @@
   gap: 1rem 2rem;
   align-items: center;
   padding: 1rem 1.5rem;
-  border-block-end: 1px solid color-mix(in srgb, CanvasText 15%, transparent);
+  border-block-end: 1px solid var(--gorilla-border);
+  transition: border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 .brand {
@@ -44,11 +51,11 @@
   a {
     color: inherit;
     text-underline-offset: 0.25em;
-    transition: opacity 150ms ease;
+    transition: color var(--gorilla-duration-fast) var(--gorilla-easing-standard);
   }
 
   a:not(.active) {
-    opacity: 0.75;
+    color: var(--gorilla-text-muted);
   }
 }
 
@@ -62,9 +69,7 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .skip-link,
-  .nav a {
-    transition: none;
-  }
+/* The theme switcher goes to the end of the header. */
+.theme {
+  margin-inline-start: auto;
 }
