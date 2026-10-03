@@ -127,6 +127,22 @@ describe('GorillaTheme', () => {
     expect(theme.resolvedTheme()).toBe('dark');
   });
 
+  it('falls back to the default and still applies themes when storage is blocked', () => {
+    fakeSystemTheme(false);
+    const blocked = () => {
+      throw new DOMException('Storage is blocked', 'SecurityError');
+    };
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(blocked);
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(blocked);
+    const theme = createTheme({ defaultTheme: 'light' });
+
+    expect(theme.theme()).toBe('light');
+    expect(() => theme.setTheme('dark')).not.toThrow();
+    expect(setItem).toHaveBeenCalled();
+    expect(theme.theme()).toBe('dark');
+    expect(root.getAttribute('data-theme')).toBe('dark');
+  });
+
   it('writes `data-theme` and `color-scheme` on `<html>`', () => {
     fakeSystemTheme(false);
     const theme = createTheme({ defaultTheme: 'dark' });

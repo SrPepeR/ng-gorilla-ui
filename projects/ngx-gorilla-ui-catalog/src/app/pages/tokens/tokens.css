@@ -5,6 +5,7 @@ section {
 .muted {
   color: var(--gorilla-text-muted);
   font-weight: var(--gorilla-font-weight-regular);
+  transition: color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
 .roles {

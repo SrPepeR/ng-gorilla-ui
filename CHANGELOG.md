@@ -14,7 +14,7 @@ First version of `ngx-gorilla-ui`: the workspace and its tooling (roadmap point 
   - Eight 12-step palettes with `light-dark()` (gray, cyan, violet, magenta, green, amber, red, blue). The brand solids keep the `ngx-monkey-ui` tones in both themes.
   - Color roles (`primary`, `secondary`, `tertiary`, `neutral`, `success`, `warning`, `danger`, `info`) whose solid and subtle pairs pass WCAG AA in both themes, plus surfaces, text, borders, focus ring, and selection.
   - Spacing, radius, shadow, typography, control height, and motion scales.
-  - Reduced motion (durations to `0s`), more contrast, and forced colors support.
+  - Reduced motion (durations to `0s`), reduced transparency (the scrim becomes nearly opaque), more contrast, and forced colors support.
 - `ngx-gorilla-ui/theme`: `GorillaTheme` (`theme`, `resolvedTheme`, `setTheme()`) and `provideGorillaTheme()`. Light, dark, and system themes; the choice is stored in `localStorage`, `system` follows `prefers-color-scheme` changes, and nothing is read or stored on the server.
 
 ### Project

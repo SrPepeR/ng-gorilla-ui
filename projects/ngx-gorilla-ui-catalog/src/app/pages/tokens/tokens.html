@@ -10,7 +10,11 @@
   <h2 id="roles-title">Color roles</h2>
   <p>
     The <code>color</code> input of the components picks one of these roles. Each pair of background
-    and text passes WCAG AA (4.5:1) in both themes; the ratios below are measured live.
+    and text passes WCAG AA (4.5:1) in both themes; the ratios below are measured live. Each role
+    <code>&lt;role&gt;</code> exposes <code>--gorilla-&lt;role&gt;-solid</code>,
+    <code>-solid-hover</code>, <code>-solid-active</code>, <code>-on-solid</code>,
+    <code>-subtle</code>, <code>-subtle-hover</code>, <code>-on-subtle</code> and
+    <code>-border</code>.
   </p>
   <div class="roles">
     @for (role of roles(); track role.name) {

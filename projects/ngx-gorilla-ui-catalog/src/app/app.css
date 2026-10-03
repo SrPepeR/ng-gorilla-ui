@@ -14,7 +14,11 @@
   border-radius: var(--gorilla-radius-md);
   box-shadow: var(--gorilla-shadow-3);
   transform: translateY(calc(-100% - 1.5rem));
-  transition: transform var(--gorilla-duration-fast) var(--gorilla-easing-standard);
+  transition:
+    transform var(--gorilla-duration-fast) var(--gorilla-easing-standard),
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    box-shadow var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 
   &:focus {
     transform: none;
