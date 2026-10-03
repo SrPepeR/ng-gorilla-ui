@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import axe from 'axe-core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { GorillaTheme } from 'ngx-gorilla-ui/theme';
 import { App } from './app';
 import { routes } from './app.routes';
@@ -48,26 +48,32 @@ describe('App', () => {
     expect(options).toEqual(['light', 'dark', 'system']);
   });
 
-  for (const theme of ['light', 'dark'] as const) {
-    it(`has no axe violations in the ${theme} theme`, async () => {
-      TestBed.inject(GorillaTheme).setTheme(theme);
-      const fixture = TestBed.createComponent(App);
-      await fixture.whenStable();
-      document.body.append(fixture.nativeElement);
-      // Measure the final colors, not the middle of the theme transition.
-      await Promise.all(document.getAnimations().map((animation) => animation.finished));
+  for (const path of ['/', '/theming', '/tokens']) {
+    for (const theme of ['light', 'dark'] as const) {
+      it(`has no axe violations on ${path} in the ${theme} theme`, async () => {
+        TestBed.inject(GorillaTheme).setTheme(theme);
+        const fixture = TestBed.createComponent(App);
+        document.body.append(fixture.nativeElement);
+        await TestBed.inject(Router).navigateByUrl(path);
+        await fixture.whenStable();
+        // Measure the final colors, not the middle of the theme transition.
+        while (document.getAnimations().length > 0) {
+          await Promise.allSettled(document.getAnimations().map((animation) => animation.finished));
+        }
 
-      const results = await axe.run(fixture.nativeElement as HTMLElement);
+        const results = await axe.run(fixture.nativeElement as HTMLElement);
 
-      expect(
-        results.violations.flatMap((violation) =>
-          violation.nodes.map(
-            (node) =>
-              `${violation.id}: ${node.target.join(' ')} ${node.any.map((check) => check.message).join(' ')}`,
+        expect(
+          results.violations.flatMap((violation) =>
+            violation.nodes.map(
+              (node) =>
+                `${violation.id}: ${node.target.join(' ')} ${node.any.map((check) => check.message).join(' ')}`,
+            ),
           ),
-        ),
-      ).toEqual([]);
-    });
+        ).toEqual([]);
+        fixture.nativeElement.remove();
+      });
+    }
   }
 
   it('applies the theme picked in the switcher', async () => {

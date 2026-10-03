@@ -97,7 +97,7 @@ describe('GorillaTheme', () => {
     expect(theme.resolvedTheme()).toBe('light');
   });
 
-  it("`setTheme('system')` removes `data-theme` and the stored choice", () => {
+  it("`setTheme('system')` removes `data-theme` and stores `system`", () => {
     fakeSystemTheme(false);
     const theme = createTheme();
     theme.setTheme('dark');
@@ -106,7 +106,16 @@ describe('GorillaTheme', () => {
 
     expect(root.hasAttribute('data-theme')).toBe(false);
     expect(root.style.getPropertyValue('color-scheme')).toBe('');
-    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+    expect(localStorage.getItem(STORAGE_KEY)).toBe('system');
+  });
+
+  it('restores an explicit `system` choice over a fixed `defaultTheme`', () => {
+    fakeSystemTheme(true);
+    localStorage.setItem(STORAGE_KEY, 'system');
+    const theme = createTheme({ defaultTheme: 'light' });
+
+    expect(theme.theme()).toBe('system');
+    expect(theme.resolvedTheme()).toBe('dark');
   });
 
   it('writes `data-theme` and `color-scheme` on `<html>`', () => {

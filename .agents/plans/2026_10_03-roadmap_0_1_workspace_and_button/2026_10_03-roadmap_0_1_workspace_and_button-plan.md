@@ -99,9 +99,10 @@ Sustituir el workspace de `ngx-monkey-ui` por uno nuevo en Angular 22 con la lib
   - stores the choice under the configured key when `setTheme()` is called (E-11).
   - follows `prefers-color-scheme` changes while the mode is `system` (E-11).
   - ignores `prefers-color-scheme` changes once the user picks `light` or `dark`.
-  - `setTheme('system')` removes `data-theme` and the stored choice.
+  - `setTheme('system')` removes `data-theme` and stores `system`.
+  - restores an explicit `system` choice over a fixed `defaultTheme`.
   - writes `data-theme` and `color-scheme` on `<html>`.
-  - does not touch `localStorage` nor `matchMedia` on the server platform (R-06).
+  - does not touch the document, `localStorage` nor `matchMedia` on the server platform (R-06).
 - `projects/ngx-gorilla-ui/styles/tokens.spec.ts` (tokens en navegador real):
   - defines every semantic color token in light and dark themes.
   - every role pair (`-solid`/`-on-solid`, `-subtle`/`-on-subtle`) and `surface`/`text` passes AA contrast in both themes.

@@ -80,7 +80,7 @@ export class GorillaTheme {
     this.applyToDocument(this.mode());
   }
 
-  /** Applies a theme and stores it; `system` clears the stored choice. */
+  /** Applies a theme and stores it, `system` included, so it overrides a fixed default. */
   setTheme(mode: GorillaThemeMode): void {
     this.mode.set(mode);
     this.storeTheme(mode);
@@ -103,15 +103,11 @@ export class GorillaTheme {
 
   private readStoredTheme(): GorillaThemeMode | null {
     const stored = this.storage((storage) => storage.getItem(this.options.storageKey));
-    return stored === 'light' || stored === 'dark' ? stored : null;
+    return stored === 'light' || stored === 'dark' || stored === 'system' ? stored : null;
   }
 
   private storeTheme(mode: GorillaThemeMode): void {
-    this.storage((storage) =>
-      mode === 'system'
-        ? storage.removeItem(this.options.storageKey)
-        : storage.setItem(this.options.storageKey, mode),
-    );
+    this.storage((storage) => storage.setItem(this.options.storageKey, mode));
   }
 
   /** Runs an operation on `localStorage`, ignoring browsers that block it (private modes). */
