@@ -1,0 +1,53 @@
+<h1>Button</h1>
+
+<p>
+  <code>gorilla-button</code> goes on the native <code>&lt;button&gt;</code> or
+  <code>&lt;a&gt;</code> element. Before the examples, the look of the <code>default</code> variant
+  is being chosen among these proposals. Switch the theme in the header to compare them in light and
+  dark, and use <kbd>Tab</kbd> to see the focus ring.
+</p>
+
+@for (proposal of proposals; track proposal.id) {
+  <section
+    class="proposal"
+    [class]="'proposal-' + proposal.id"
+    [attr.aria-labelledby]="proposal.id + '-title'"
+  >
+    <h2 [id]="proposal.id + '-title'">{{ proposal.name }}</h2>
+    <p class="muted">{{ proposal.description }}</p>
+
+    <div class="matrix" role="group" [attr.aria-label]="proposal.name + ': colors by appearance'">
+      <span></span>
+      @for (appearance of appearances; track appearance) {
+        <span class="heading">{{ appearance }}</span>
+      }
+      @for (color of colors; track color) {
+        <span class="heading">{{ color }}</span>
+        @for (appearance of appearances; track appearance) {
+          <span>
+            <button gorilla-button type="button" [color]="color" [appearance]="appearance">
+              Button
+            </button>
+          </span>
+        }
+      }
+    </div>
+
+    <h3>Sizes</h3>
+    <div class="row">
+      @for (size of sizes; track size) {
+        <button gorilla-button type="button" [size]="size">Size {{ size }}</button>
+      }
+    </div>
+
+    <h3>Disabled</h3>
+    <div class="row">
+      @for (appearance of appearances; track appearance) {
+        <button gorilla-button type="button" [appearance]="appearance" disabled>
+          {{ appearance }}
+        </button>
+      }
+      <a gorilla-button href="#" appearance="outlined" disabled>Disabled link</a>
+    </div>
+  </section>
+}

@@ -19,7 +19,8 @@ body {
     color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
 
-a {
+/* Unlayered rules beat `@layer gorilla`: leave the links styled as buttons alone. */
+a:not(.gorilla-button) {
   color: var(--gorilla-primary-on-subtle);
   transition: color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }

@@ -33,7 +33,7 @@ describe('App', () => {
       element.querySelectorAll('nav[aria-label="Documentation"] a'),
       (link) => link.textContent?.trim(),
     );
-    expect(links).toEqual(['Getting started', 'Theming', 'Tokens']);
+    expect(links).toEqual(['Getting started', 'Theming', 'Tokens', 'Button']);
   });
 
   it('renders the theme switcher with the light, dark and system options', async () => {
@@ -48,7 +48,7 @@ describe('App', () => {
     expect(options).toEqual(['light', 'dark', 'system']);
   });
 
-  for (const path of ['/', '/theming', '/tokens']) {
+  for (const path of ['/', '/theming', '/tokens', '/button']) {
     for (const theme of ['light', 'dark'] as const) {
       it(`has no axe violations on ${path} in the ${theme} theme`, async () => {
         TestBed.inject(GorillaTheme).setTheme(theme);

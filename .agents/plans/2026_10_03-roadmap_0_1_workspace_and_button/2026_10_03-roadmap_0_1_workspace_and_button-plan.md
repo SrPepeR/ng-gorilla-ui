@@ -17,7 +17,7 @@ implemented_by:
     version: "5.5"
     reasoning_effort: "low"
 
-last_implementation_at: "2026-10-03T13:50:00Z"
+last_implementation_at: "2026-10-04T09:45:00Z"
 has_completed_all_phases: "false"
 ---
 
@@ -184,20 +184,20 @@ Primer entry point real: los tokens en CSS y `GorillaTheme`. El catálogo muestr
 - [x] Entry point `ngx-gorilla-ui/theme` con `GorillaTheme`, `provideGorillaTheme()` y sus tipos, sin acceso directo a `window`, `document` ni `localStorage` (`DOCUMENT`, `isPlatformBrowser`). Ajustar el target `test` de la librería (`include`) y `tsconfig.lib.json` para que cubran las carpetas de los entry points secundarios, que quedan fuera de `src/`.
 - [x] Suites `gorilla-theme.spec.ts` y `tokens.spec.ts` con todos sus casos.
 - [x] Catálogo: `provideGorillaTheme()`, selector `Light`/`Dark`/`System` en la cabecera y páginas `Theming` (cómo usar el tema y sobrescribir tokens) y `Tokens` (paletas, roles con su contraste, escalas).
-- [ ] Revisar con el usuario las paletas en el catálogo y ajustar los pasos que no pasen AA. Las paletas se generan con `npm run tokens:palette` (`scripts/generate-palette.mjs`), que falla si un par no pasa AA.
+- [x] Revisar con el usuario las paletas en el catálogo y ajustar los pasos que no pasen AA. Las paletas se generan con `npm run tokens:palette` (`scripts/generate-palette.mjs`), que falla si un par no pasa AA.
 - [x] Marcar 1.1 y 1.2 en `docs/ROADMAP.md` y añadir la entrada en `CHANGELOG.md`.
 - [x] Verify the changes in terms of typechecking, linting and tests using the project's verification command (`npm run verify`). Fix issues if any.
-- [ ] STOP. Present the changes to the user for review and suggest pull request titles. Do NOT proceed to the next phase until the user explicitly asks.
+- [x] STOP. Present the changes to the user for review and suggest pull request titles. Do NOT proceed to the next phase until the user explicitly asks.
 
 ### Fase 4: directiva de variante y botón `default`
 
 La directiva `GorillaVariant` y el botón completo en la variante `default`: ocho colores, cinco tamaños, cuatro apariencias, `disabled` y transiciones. El aspecto de `default` se elige entre propuestas en el catálogo.
 
-- [ ] Crear la rama `feat/button` desde `release/0.1.0`.
-- [ ] Entry point `ngx-gorilla-ui/core` con `GorillaVariant` y sus tipos, y la suite `gorilla-variant.spec.ts`.
-- [ ] Entry point `ngx-gorilla-ui/button` con `GorillaButton` sobre `button` y `a`, estilos en `@layer gorilla` con selectores `:where()`, variables propias `--gorilla-button-*` y transiciones con los tokens de movimiento.
+- [x] Crear la rama `feat/button` desde `release/0.1.0`.
+- [x] Entry point `ngx-gorilla-ui/core` con `GorillaVariant` y sus tipos, y la suite `gorilla-variant.spec.ts`.
+- [x] Entry point `ngx-gorilla-ui/button` con `GorillaButton` sobre `button` y `a`, estilos en `@layer gorilla` con selectores `:where()`, variables propias `--gorilla-button-*` y transiciones con los tokens de movimiento.
 - [ ] Implementar 2 o 3 propuestas de la variante `default` (por ejemplo suave y redondeada, geométrica y nítida, expresiva y tonal) en una página temporal del catálogo; el usuario elige una y se borran las demás.
-- [ ] Suite `gorilla-button.spec.ts` con todos sus casos.
+- [x] Suite `gorilla-button.spec.ts` con todos sus casos.
 - [ ] `size-limit` con `@size-limit/file` sobre el build de cada entry point (`core`, `theme`, `button`): medir y fijar el límite con un 10 % de margen; script `size` en `verify` y en la CI.
 - [ ] Página `Button` del catálogo con ejemplos de colores, tamaños, apariencias y `disabled` (la documentación completa llega en la fase 7).
 - [ ] Añadir la entrada en `CHANGELOG.md` y marcar 1.3 en `docs/ROADMAP.md` (1.4 se marca en la fase 5).
