@@ -12,6 +12,6 @@
   {
     "name": "ngx-gorilla-ui/button",
     "path": "dist/ngx-gorilla-ui/fesm2022/ngx-gorilla-ui-button.mjs",
-    "limit": "3.1 kB"
+    "limit": "3.25 kB"
   }
 ]

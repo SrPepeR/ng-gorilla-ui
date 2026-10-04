@@ -272,15 +272,20 @@
 
   /* Forced colors: the system draws the button; keep the focus ring and the disabled state. */
   @media (forced-colors: active) {
+    /* The system paints a transparent outline, so there is no outline until keyboard focus. */
     :where(.gorilla-button) {
-      outline-color: transparent;
+      outline-style: none;
     }
 
     :where(.gorilla-button:focus-visible) {
+      outline-style: solid;
       outline-color: Highlight;
     }
 
+    /* A disabled `<a>` would keep the link color: draw every disabled button in `GrayText`. */
     :where(.gorilla-button:disabled, .gorilla-button[aria-disabled='true']) {
+      forced-color-adjust: none;
+      background-color: Canvas;
       border-color: GrayText;
       color: GrayText;
     }

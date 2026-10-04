@@ -169,8 +169,7 @@ export class GorillaButton implements AfterViewChecked {
       untracked(() => {
         if (disabled && !disabledLink) {
           disabledLink = true;
-          const serverValues = element.getAttribute(marker);
-          const saved: Record<string, string | null> = serverValues ? JSON.parse(serverValues) : {};
+          const saved = readMarker(element.getAttribute(marker));
           for (const name of Object.keys(owned)) {
             authorValues.set(name, name in saved ? saved[name] : element.getAttribute(name));
           }
@@ -188,4 +187,26 @@ export class GorillaButton implements AfterViewChecked {
     });
     return observer;
   }
+}
+
+/**
+ * Reads the author values a server render left in `data-gorilla-author`. The markup can come from
+ * anywhere, so anything that is not an object of strings and `null`s is ignored.
+ */
+function readMarker(value: string | null): Record<string, string | null> {
+  let parsed: unknown;
+  try {
+    parsed = value ? JSON.parse(value) : null;
+  } catch {
+    return {};
+  }
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    return {};
+  }
+  return Object.fromEntries(
+    Object.entries(parsed).filter(
+      (entry): entry is [string, string | null] =>
+        entry[1] === null || typeof entry[1] === 'string',
+    ),
+  );
 }

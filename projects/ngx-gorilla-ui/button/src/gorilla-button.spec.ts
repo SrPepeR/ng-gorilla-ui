@@ -256,6 +256,23 @@ describe('GorillaButton', () => {
     expect(link.getAttribute('aria-disabled')).toBe('false');
   });
 
+  it('on `<a>`, ignores a malformed `data-gorilla-author` and reads the current attributes', async () => {
+    const { fixture, page, link } = await render();
+    for (const marker of ['{not json', 'null', '[1]', '{"href":3,"tabindex":"6"}']) {
+      link.setAttribute('data-gorilla-author', marker);
+      link.setAttribute('tabindex', '2');
+
+      page.disabled.set(true);
+      await fixture.whenStable();
+      expect(link.getAttribute('tabindex'), marker).toBe('-1');
+
+      page.disabled.set(false);
+      await fixture.whenStable();
+      expect(link.getAttribute('href'), marker).toBe('#target');
+      expect(link.getAttribute('tabindex'), marker).toBe(marker.includes('"6"') ? '6' : '2');
+    }
+  });
+
   it('on `<a>`, keeps the author values through the server render and the hydration of a disabled link', () => {
     const environmentInjector = TestBed.inject(EnvironmentInjector);
     const appRef = TestBed.inject(ApplicationRef);
@@ -372,6 +389,38 @@ describe('GorillaButton', () => {
     expect(document.activeElement).toBe(button);
     expect(button.matches(':focus-visible')).toBe(true);
     expect(outline()).toBe(ring());
+  });
+
+  it('under `forced-colors: active`, shows the outline only on keyboard focus and draws disabled buttons and links in `GrayText`', async () => {
+    const { fixture, page, button, link } = await render();
+    await cdp().send('Emulation.setEmulatedMedia', {
+      features: [{ name: 'forced-colors', value: 'active' }],
+    });
+    const system = (color: string) => {
+      const probe = document.createElement('span');
+      probe.style.color = color;
+      document.body.append(probe);
+      const resolved = getComputedStyle(probe).color;
+      probe.remove();
+      return resolved;
+    };
+
+    // Read the end values, not the middle of the color transitions.
+    for (const element of [button, link]) {
+      element.style.setProperty('--gorilla-button-transition-duration', '0s');
+    }
+    expect(getComputedStyle(button).outlineStyle).toBe('none');
+    link.focus();
+    await userEvent.tab({ shift: true });
+    expect(button.matches(':focus-visible')).toBe(true);
+    expect(getComputedStyle(button).outlineStyle).toBe('solid');
+
+    page.disabled.set(true);
+    await fixture.whenStable();
+    for (const element of [button, link]) {
+      expect(getComputedStyle(element).color, element.tagName).toBe(system('GrayText'));
+      expect(getComputedStyle(element).borderTopColor, element.tagName).toBe(system('GrayText'));
+    }
   });
 
   it('transitions background, color, border and shadow, and the transition duration is `0s` under reduced motion, whatever the app sets', async () => {
