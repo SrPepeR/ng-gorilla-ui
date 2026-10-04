@@ -90,13 +90,20 @@ export class ButtonPage {
   --gorilla-button-hover-transform: none;
 }`;
 
-  protected readonly usageSnippet = `import { GorillaButton } from 'ngx-gorilla-ui/button';
+  protected readonly usageSnippet = `import { Component } from '@angular/core';
+import { GorillaButton } from 'ngx-gorilla-ui/button';
 
 @Component({
+  selector: 'app-actions',
   imports: [GorillaButton],
   template: \`
     <button gorilla-button type="button" color="success" (click)="save()">Save</button>
     <a gorilla-button appearance="text" href="/docs">Read the docs</a>
   \`,
-})`;
+})
+export class Actions {
+  save(): void {
+    // Save the changes.
+  }
+}`;
 }

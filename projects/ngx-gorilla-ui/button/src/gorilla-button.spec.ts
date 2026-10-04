@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {
+  ApplicationRef,
+  ChangeDetectionStrategy,
+  Component,
+  createComponent,
+  EnvironmentInjector,
+  signal,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { cdp, userEvent } from 'vitest/browser';
 import tokensCss from '../../styles/tokens.css' with { loader: 'text' };
@@ -47,24 +54,6 @@ class Page {
   readonly clicks = signal(0);
   readonly linkTabIndex = signal<string | null>(null);
   readonly linkAriaDisabled = signal<string | null>(null);
-}
-
-@Component({
-  imports: [GorillaButton],
-  // The markup a disabled link gets from the server: the owned values and the author's ones.
-  template: `<a
-    gorilla-button
-    role="link"
-    tabindex="-1"
-    aria-disabled="true"
-    data-gorilla-author='{"href":"#target","role":null,"tabindex":"4","aria-disabled":null}'
-    [disabled]="disabled()"
-    >Hydrated</a
-  >`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-class ServerRenderedPage {
-  readonly disabled = signal(true);
 }
 
 describe('GorillaButton', () => {
@@ -242,20 +231,51 @@ describe('GorillaButton', () => {
     expect(link.getAttribute('aria-disabled')).toBe('true');
   });
 
-  it('on `<a>`, restores the author values kept by the server when a server-rendered disabled link is enabled', async () => {
-    const fixture = TestBed.createComponent(ServerRenderedPage);
-    await fixture.whenStable();
-    const link = (fixture.nativeElement as HTMLElement).querySelector('a') as HTMLAnchorElement;
-    expect(link.getAttribute('tabindex')).toBe('-1');
-    expect(link.getAttribute('aria-disabled')).toBe('true');
+  it('on `<a>`, keeps the author values through the server render and the hydration of a disabled link', () => {
+    const environmentInjector = TestBed.inject(EnvironmentInjector);
+    const appRef = TestBed.inject(ApplicationRef);
+    // Creates the button on an existing element, as hydration does with the server markup.
+    const create = (hostElement: HTMLElement, disabled: boolean) => {
+      const ref = createComponent(GorillaButton, { environmentInjector, hostElement });
+      ref.setInput('disabled', disabled);
+      appRef.attachView(ref.hostView);
+      appRef.tick();
+      return ref;
+    };
 
-    fixture.componentInstance.disabled.set(false);
-    await fixture.whenStable();
+    // Server: no `MutationObserver`; render a disabled link and serialize it.
+    vi.stubGlobal('MutationObserver', undefined);
+    const serverLink = document.createElement('a');
+    serverLink.setAttribute('href', '#target');
+    serverLink.setAttribute('tabindex', '4');
+    serverLink.textContent = 'Link';
+    const serverRef = create(serverLink, true);
+    const html = serverLink.outerHTML;
+    serverRef.destroy();
+    vi.unstubAllGlobals();
+
+    // Client: parse the server markup and hydrate it, still disabled.
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    document.body.append(container);
+    onTestFinished(() => container.remove());
+    const link = container.firstElementChild as HTMLAnchorElement;
+    expect(link.hasAttribute('href')).toBe(false);
+    expect(link.getAttribute('tabindex')).toBe('-1');
+    const clientRef = create(link, true);
+    expect(link.hasAttribute('href')).toBe(false);
+    expect(link.getAttribute('role')).toBe('link');
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+    expect(link.getAttribute('tabindex')).toBe('-1');
+
+    clientRef.setInput('disabled', false);
+    appRef.tick();
     expect(link.getAttribute('href')).toBe('#target');
-    expect(link.hasAttribute('role')).toBe(false);
     expect(link.getAttribute('tabindex')).toBe('4');
+    expect(link.hasAttribute('role')).toBe(false);
     expect(link.hasAttribute('aria-disabled')).toBe(false);
     expect(link.hasAttribute('data-gorilla-author')).toBe(false);
+    clientRef.destroy();
   });
 
   it('reads the hover and press transforms from `--gorilla-button-*-transform` and darkens while pressed', async () => {
@@ -329,7 +349,7 @@ describe('GorillaButton', () => {
     expect(outline()).toBe(ring());
   });
 
-  it('transitions background, color, border and shadow, and the transition duration is `0s` under reduced motion', async () => {
+  it('transitions background, color, border and shadow, and the transition duration is `0s` under reduced motion, whatever the app sets', async () => {
     const { button } = await render();
     const properties = getComputedStyle(button)
       .transitionProperty.split(',')
@@ -354,6 +374,9 @@ describe('GorillaButton', () => {
       features: [{ name: 'prefers-reduced-motion', value: 'reduce' }],
     });
 
+    expect(getComputedStyle(button).transitionDuration).toBe('0s');
+    // Also when the app sets its own duration.
+    button.style.setProperty('--gorilla-button-transition-duration', '300ms');
     expect(getComputedStyle(button).transitionDuration).toBe('0s');
   });
 });

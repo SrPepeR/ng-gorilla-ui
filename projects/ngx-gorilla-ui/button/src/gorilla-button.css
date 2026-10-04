@@ -263,6 +263,13 @@
     --_gorilla-button-border-color: var(--gorilla-border-disabled);
   }
 
+  /* Reduced motion wins over a `--gorilla-button-transition-duration` set by the app. */
+  @media (prefers-reduced-motion: reduce) {
+    :where(.gorilla-button) {
+      transition-duration: 0s;
+    }
+  }
+
   /* Forced colors: the system draws the button; keep the focus ring and the disabled state. */
   @media (forced-colors: active) {
     :where(.gorilla-button) {
