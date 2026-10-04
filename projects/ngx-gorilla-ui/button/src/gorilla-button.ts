@@ -102,7 +102,8 @@ export class GorillaButton implements AfterViewChecked {
    * keeps it announced as a link, now with `aria-disabled="true"` and out of the tab order.
    *
    * The author's values also live in `data-gorilla-author` while disabled, so a link rendered
-   * disabled on the server finds them on hydration instead of reading the disabled ones. Returns
+   * disabled on the server finds them on hydration instead of reading the disabled ones. That
+   * attribute is reserved for the button, and the `href` restored from it is sanitized. Returns
    * the observer of the author's writes, `null` on the server, where there is no
    * `MutationObserver`; there, `ngAfterViewChecked` catches the author's writes after each render
    * pass (the observer also catches a write of the same value as the disabled one).
@@ -121,6 +122,10 @@ export class GorillaButton implements AfterViewChecked {
       value === null
         ? renderer.removeAttribute(element, name)
         : renderer.setAttribute(element, name, value);
+    // Restored values leave Angular's bindings, and the server marker is plain DOM: sanitize the
+    // `href` again so a `javascript:` URL never comes back.
+    const restore = (name: string, value: string | null) =>
+      write(name, name === 'href' && value !== null ? sanitizeUrl(value) : value);
     const writeOwned = () => {
       renderer.setAttribute(element, marker, JSON.stringify(Object.fromEntries(authorValues)));
       for (const name of Object.keys(owned)) {
@@ -181,7 +186,7 @@ export class GorillaButton implements AfterViewChecked {
           disabledLink = false;
           keepAuthorWrites(observer?.takeRecords() ?? []);
           observer?.disconnect();
-          authorValues.forEach((value, name) => write(name, value));
+          authorValues.forEach((value, name) => restore(name, value));
           authorValues.clear();
           renderer.removeAttribute(element, marker);
         }
@@ -211,4 +216,12 @@ function readMarker(value: string | null): Record<string, string | null> {
         entry[1] === null || typeof entry[1] === 'string',
     ),
   );
+}
+
+/** URLs Angular treats as safe: any scheme but `javascript:`, or a relative URL. */
+const SAFE_URL = /^(?!javascript:)(?:[a-z0-9+.-]+:|[^&:/?#]*(?:[/?#]|$))/i;
+
+/** Sanitizes a URL as Angular's `SecurityContext.URL` does: unsafe ones get the `unsafe:` prefix. */
+function sanitizeUrl(url: string): string {
+  return SAFE_URL.test(url) ? url : `unsafe:${url}`;
 }

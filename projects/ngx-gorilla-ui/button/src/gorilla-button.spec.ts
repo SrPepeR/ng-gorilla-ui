@@ -277,6 +277,24 @@ describe('GorillaButton', () => {
     }
   });
 
+  it('on `<a>`, sanitizes the `href` restored from `data-gorilla-author`', async () => {
+    const { fixture, page, link } = await render();
+    for (const [href, restored] of [
+      ['javascript:alert(1)', 'unsafe:javascript:alert(1)'],
+      [' JavaScript:alert(1)', 'unsafe: JavaScript:alert(1)'],
+      ['/docs?page=1', '/docs?page=1'],
+      ['https://example.com', 'https://example.com'],
+    ]) {
+      link.setAttribute('data-gorilla-author', JSON.stringify({ href }));
+      page.disabled.set(true);
+      await fixture.whenStable();
+      page.disabled.set(false);
+      await fixture.whenStable();
+
+      expect(link.getAttribute('href'), href).toBe(restored);
+    }
+  });
+
   it('on `<a>`, keeps the author values through the server render and the hydration of a disabled link', () => {
     const environmentInjector = TestBed.inject(EnvironmentInjector);
     const appRef = TestBed.inject(ApplicationRef);
