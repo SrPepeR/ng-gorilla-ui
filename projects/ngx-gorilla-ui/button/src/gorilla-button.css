@@ -24,8 +24,8 @@
     border: var(--gorilla-button-border-width, var(--_gorilla-button-border-width)) solid
       var(--gorilla-button-border-color, var(--_gorilla-button-border-color));
     border-radius: var(--gorilla-button-radius, var(--gorilla-radius-md));
-    outline: 2px solid transparent;
-    outline-offset: 2px;
+    outline: var(--gorilla-button-focus-ring-width, 2px) solid transparent;
+    outline-offset: var(--gorilla-button-focus-ring-offset, 2px);
     background-color: var(--gorilla-button-background, var(--_gorilla-button-background));
     box-shadow: var(--gorilla-button-shadow, var(--_gorilla-button-shadow));
     color: var(--gorilla-button-color, var(--_gorilla-button-color));

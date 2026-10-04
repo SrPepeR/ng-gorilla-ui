@@ -49,6 +49,24 @@ class Page {
   readonly linkAriaDisabled = signal<string | null>(null);
 }
 
+@Component({
+  imports: [GorillaButton],
+  // The markup a disabled link gets from the server: the owned values and the author's ones.
+  template: `<a
+    gorilla-button
+    href="#target"
+    tabindex="-1"
+    aria-disabled="true"
+    data-gorilla-author='{"tabindex":"4","aria-disabled":null}'
+    [disabled]="disabled()"
+    >Hydrated</a
+  >`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class ServerRenderedPage {
+  readonly disabled = signal(true);
+}
+
 describe('GorillaButton', () => {
   let style: HTMLStyleElement;
 
@@ -147,6 +165,10 @@ describe('GorillaButton', () => {
     await fixture.whenStable();
     expect(link.getAttribute('aria-disabled')).toBe('true');
     expect(link.getAttribute('tabindex')).toBe('-1');
+    expect(JSON.parse(link.getAttribute('data-gorilla-author') ?? '')).toEqual({
+      tabindex: null,
+      'aria-disabled': null,
+    });
 
     const hash = location.hash;
     const click = new MouseEvent('click', { bubbles: true, cancelable: true });
@@ -208,6 +230,20 @@ describe('GorillaButton', () => {
     await fixture.whenStable();
     expect(link.getAttribute('tabindex')).toBe('-1');
     expect(link.getAttribute('aria-disabled')).toBe('true');
+  });
+
+  it('on `<a>`, restores the author values kept by the server when a server-rendered disabled link is enabled', async () => {
+    const fixture = TestBed.createComponent(ServerRenderedPage);
+    await fixture.whenStable();
+    const link = (fixture.nativeElement as HTMLElement).querySelector('a') as HTMLAnchorElement;
+    expect(link.getAttribute('tabindex')).toBe('-1');
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+
+    fixture.componentInstance.disabled.set(false);
+    await fixture.whenStable();
+    expect(link.getAttribute('tabindex')).toBe('4');
+    expect(link.hasAttribute('aria-disabled')).toBe(false);
+    expect(link.hasAttribute('data-gorilla-author')).toBe(false);
   });
 
   it('reads the hover and press transforms from `--gorilla-button-*-transform`', async () => {

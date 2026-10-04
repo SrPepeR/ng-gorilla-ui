@@ -71,6 +71,8 @@ export class ButtonPage {
     ['--gorilla-button-shadow', 'Shadow: a glow in the role color on filled.'],
     ['--gorilla-button-hover-transform', 'Transform on hover (scale(1.03)).'],
     ['--gorilla-button-active-transform', 'Transform while pressed (scale(0.95)).'],
+    ['--gorilla-button-focus-ring-width', 'Width of the keyboard focus ring (2px).'],
+    ['--gorilla-button-focus-ring-offset', 'Gap between the button and its focus ring (2px).'],
     [
       '--gorilla-button-transition-duration',
       'Duration of every transition (--gorilla-duration-normal).',

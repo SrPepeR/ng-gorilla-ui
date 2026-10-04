@@ -71,14 +71,36 @@ export class GorillaButton {
 
     // On `<a>`, `disabled` takes over `aria-disabled` and `tabindex`. The author's values are kept
     // aside while disabled (also the ones they set or bind later) and come back on re-enable.
+    const observer = this.isButton ? null : this.manageDisabledLink(element);
+    inject(DestroyRef).onDestroy(() => {
+      observer?.disconnect();
+      element.removeEventListener('click', blockWhileDisabled, { capture: true });
+    });
+  }
+
+  /**
+   * Swaps the author's `tabindex` and `aria-disabled` of an `<a>` for the disabled ones and back.
+   *
+   * The author's values also live in `data-gorilla-author` while disabled, so a link rendered
+   * disabled on the server finds them on hydration instead of reading the disabled ones. Returns
+   * the observer of the author's writes, `null` on the server, where there is no
+   * `MutationObserver`.
+   */
+  private manageDisabledLink(element: HTMLElement): MutationObserver | null {
     const owned: Record<string, string> = { tabindex: '-1', 'aria-disabled': 'true' };
+    const marker = 'data-gorilla-author';
     const authorValues = new Map<string, string | null>();
     const renderer = inject(Renderer2);
     const write = (name: string, value: string | null) =>
       value === null
         ? renderer.removeAttribute(element, name)
         : renderer.setAttribute(element, name, value);
-    // Watches the author's writes while disabled; there is no `MutationObserver` on the server.
+    const writeOwned = () => {
+      renderer.setAttribute(element, marker, JSON.stringify(Object.fromEntries(authorValues)));
+      for (const name of Object.keys(owned)) {
+        write(name, owned[name]);
+      }
+    };
     // The observer is off during our own writes, so every record it gets is an author write, even
     // one that sets the same value as ours.
     const options: MutationObserverInit = { attributeFilter: Object.keys(owned) };
@@ -95,37 +117,33 @@ export class GorillaButton {
         : new MutationObserver((records) => {
             observer?.disconnect();
             keepAuthorWrites(records);
-            for (const name of Object.keys(owned)) {
-              write(name, owned[name]);
-            }
+            writeOwned();
             observer?.observe(element, options);
           });
     let disabledLink = false;
 
-    if (!this.isButton) {
-      effect(() => {
-        const disabled = this.disabled();
-        untracked(() => {
-          if (disabled && !disabledLink) {
-            disabledLink = true;
-            for (const name of Object.keys(owned)) {
-              authorValues.set(name, element.getAttribute(name));
-              write(name, owned[name]);
-            }
-            observer?.observe(element, options);
-          } else if (!disabled && disabledLink) {
-            disabledLink = false;
-            keepAuthorWrites(observer?.takeRecords() ?? []);
-            observer?.disconnect();
-            authorValues.forEach((value, name) => write(name, value));
-            authorValues.clear();
+    effect(() => {
+      const disabled = this.disabled();
+      untracked(() => {
+        if (disabled && !disabledLink) {
+          disabledLink = true;
+          const serverValues = element.getAttribute(marker);
+          const saved: Record<string, string | null> = serverValues ? JSON.parse(serverValues) : {};
+          for (const name of Object.keys(owned)) {
+            authorValues.set(name, name in saved ? saved[name] : element.getAttribute(name));
           }
-        });
+          writeOwned();
+          observer?.observe(element, options);
+        } else if (!disabled && disabledLink) {
+          disabledLink = false;
+          keepAuthorWrites(observer?.takeRecords() ?? []);
+          observer?.disconnect();
+          authorValues.forEach((value, name) => write(name, value));
+          authorValues.clear();
+          renderer.removeAttribute(element, marker);
+        }
       });
-    }
-    inject(DestroyRef).onDestroy(() => {
-      observer?.disconnect();
-      element.removeEventListener('click', blockWhileDisabled, { capture: true });
     });
+    return observer;
   }
 }
