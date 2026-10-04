@@ -1,0 +1,82 @@
+section {
+  margin-block-start: var(--gorilla-space-10);
+}
+
+.matrix {
+  /* Room for the glow of filled buttons, which the scroll container would clip. */
+  margin-inline: calc(-1 * var(--gorilla-space-4));
+  padding: var(--gorilla-space-2) var(--gorilla-space-4) var(--gorilla-space-4);
+  overflow-x: auto;
+
+  table {
+    inline-size: auto;
+    border-collapse: separate;
+    border-spacing: var(--gorilla-space-4) var(--gorilla-space-3);
+    margin-inline: calc(-1 * var(--gorilla-space-4));
+  }
+
+  th,
+  td {
+    padding: 0;
+    border: none;
+    vertical-align: middle;
+  }
+
+  th {
+    color: var(--gorilla-text-muted);
+    font-size: var(--gorilla-font-size-sm);
+    font-weight: var(--gorilla-font-weight-regular);
+    transition: color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+  }
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gorilla-space-3);
+  align-items: center;
+}
+
+pre {
+  overflow-x: auto;
+  padding: var(--gorilla-space-4);
+  background: var(--gorilla-surface-raised);
+  border: 1px solid var(--gorilla-border);
+  border-radius: var(--gorilla-radius-md);
+  font-size: var(--gorilla-font-size-sm);
+  line-height: var(--gorilla-line-height-normal);
+  transition:
+    background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+.table {
+  overflow-x: auto;
+}
+
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--gorilla-font-size-sm);
+}
+
+th,
+td {
+  padding: var(--gorilla-space-2) var(--gorilla-space-3);
+  border-block-end: 1px solid var(--gorilla-border);
+  text-align: start;
+  vertical-align: top;
+  transition: border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+thead th {
+  color: var(--gorilla-text-muted);
+  font-weight: var(--gorilla-font-weight-medium);
+  transition:
+    color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+li {
+  margin-block-end: var(--gorilla-space-2);
+}

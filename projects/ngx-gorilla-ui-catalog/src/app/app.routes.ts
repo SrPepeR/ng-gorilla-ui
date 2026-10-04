@@ -17,5 +17,10 @@ export const routes: Routes = [
     title: 'Tokens · ngx-gorilla-ui',
     loadComponent: () => import('./pages/tokens/tokens').then((m) => m.Tokens),
   },
+  {
+    path: 'button',
+    title: 'Button · ngx-gorilla-ui',
+    loadComponent: () => import('./pages/button/button').then((m) => m.ButtonPage),
+  },
   { path: '**', redirectTo: '' },
 ];

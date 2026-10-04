@@ -1,0 +1,293 @@
+/*
+ * gorilla-button styles.
+ *
+ * Everything is inside `@layer gorilla` with `:where()` selectors, so any unlayered app rule wins
+ * without `!important`. The public `--gorilla-button-*` properties are never declared here: each
+ * rule reads them with a fallback, so setting one on `:root`, on a container or on a single
+ * button overrides the default for every size, color and state below it.
+ *
+ * Private `--_gorilla-button-*` properties carry the defaults of the current size, color,
+ * appearance and state.
+ */
+@layer gorilla {
+  :where(.gorilla-button) {
+    position: relative;
+    display: inline-flex;
+    gap: var(--gorilla-button-gap, var(--gorilla-space-2));
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-block-size: var(--gorilla-button-height, var(--_gorilla-button-height));
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--gorilla-button-padding-inline, var(--_gorilla-button-padding-inline));
+    border: var(--gorilla-button-border-width, var(--_gorilla-button-border-width)) solid
+      var(--gorilla-button-border-color, var(--_gorilla-button-border-color));
+    border-radius: var(--gorilla-button-radius, var(--gorilla-radius-md));
+    outline: var(--gorilla-button-focus-ring-width, 2px) solid transparent;
+    outline-offset: var(--gorilla-button-focus-ring-offset, 2px);
+    background-color: var(--gorilla-button-background, var(--_gorilla-button-background));
+    box-shadow: var(--gorilla-button-shadow, var(--_gorilla-button-shadow));
+    color: var(--gorilla-button-color, var(--_gorilla-button-color));
+    font-family: var(--gorilla-font-family);
+    font-size: var(--gorilla-button-font-size, var(--_gorilla-button-font-size));
+    font-weight: var(--gorilla-button-font-weight, var(--gorilla-font-weight-bold));
+    line-height: var(--gorilla-line-height-tight);
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transform: var(--_gorilla-button-transform, none);
+    /* Every visual change animates, size and appearance changes included. */
+    transition-property:
+      background-color, color, border-color, border-width, box-shadow, outline-color,
+      min-block-size, padding-inline, font-size, transform;
+    transition-duration: var(--gorilla-button-transition-duration, var(--gorilla-duration-normal));
+    /* Everything eases in, and the scale on hover and press springs. */
+    transition-timing-function:
+      var(--gorilla-easing-standard), var(--gorilla-easing-standard),
+      var(--gorilla-easing-standard), var(--gorilla-easing-standard),
+      var(--gorilla-easing-standard), var(--gorilla-easing-standard),
+      var(--gorilla-easing-standard), var(--gorilla-easing-standard),
+      var(--gorilla-easing-standard), var(--gorilla-easing-spring);
+
+    /* Defaults for `size="md"`, `color="primary"` and `appearance="filled"`. */
+    --_gorilla-button-height: var(--gorilla-control-height-md);
+    --_gorilla-button-padding-inline: var(--gorilla-space-6);
+    --_gorilla-button-font-size: var(--gorilla-font-size-md);
+    --_gorilla-button-border-width: 1px;
+    --_gorilla-button-solid: var(--gorilla-primary-solid);
+    --_gorilla-button-solid-hover: var(--gorilla-primary-solid-hover);
+    --_gorilla-button-solid-active: var(--gorilla-primary-solid-active);
+    --_gorilla-button-on-solid: var(--gorilla-primary-on-solid);
+    --_gorilla-button-subtle: var(--gorilla-primary-subtle);
+    --_gorilla-button-subtle-hover: var(--gorilla-primary-subtle-hover);
+    --_gorilla-button-on-subtle: var(--gorilla-primary-on-subtle);
+    --_gorilla-button-role-border: var(--gorilla-primary-border);
+  }
+
+  /* Sizes. */
+  :where(.gorilla-button.gorilla-size-xs) {
+    --_gorilla-button-height: var(--gorilla-control-height-xs);
+    --_gorilla-button-padding-inline: var(--gorilla-space-4);
+    --_gorilla-button-font-size: var(--gorilla-font-size-xs);
+  }
+
+  :where(.gorilla-button.gorilla-size-sm) {
+    --_gorilla-button-height: var(--gorilla-control-height-sm);
+    --_gorilla-button-padding-inline: var(--gorilla-space-4);
+    --_gorilla-button-font-size: var(--gorilla-font-size-sm);
+  }
+
+  :where(.gorilla-button.gorilla-size-lg) {
+    --_gorilla-button-height: var(--gorilla-control-height-lg);
+    --_gorilla-button-padding-inline: var(--gorilla-space-6);
+    --_gorilla-button-font-size: var(--gorilla-font-size-lg);
+  }
+
+  :where(.gorilla-button.gorilla-size-xl) {
+    --_gorilla-button-height: var(--gorilla-control-height-xl);
+    --_gorilla-button-padding-inline: var(--gorilla-space-6);
+    --_gorilla-button-font-size: var(--gorilla-font-size-xl);
+  }
+
+  /* Colors: each role maps its semantic tokens. */
+  :where(.gorilla-button.gorilla-color-secondary) {
+    --_gorilla-button-solid: var(--gorilla-secondary-solid);
+    --_gorilla-button-solid-hover: var(--gorilla-secondary-solid-hover);
+    --_gorilla-button-solid-active: var(--gorilla-secondary-solid-active);
+    --_gorilla-button-on-solid: var(--gorilla-secondary-on-solid);
+    --_gorilla-button-subtle: var(--gorilla-secondary-subtle);
+    --_gorilla-button-subtle-hover: var(--gorilla-secondary-subtle-hover);
+    --_gorilla-button-on-subtle: var(--gorilla-secondary-on-subtle);
+    --_gorilla-button-role-border: var(--gorilla-secondary-border);
+  }
+
+  :where(.gorilla-button.gorilla-color-tertiary) {
+    --_gorilla-button-solid: var(--gorilla-tertiary-solid);
+    --_gorilla-button-solid-hover: var(--gorilla-tertiary-solid-hover);
+    --_gorilla-button-solid-active: var(--gorilla-tertiary-solid-active);
+    --_gorilla-button-on-solid: var(--gorilla-tertiary-on-solid);
+    --_gorilla-button-subtle: var(--gorilla-tertiary-subtle);
+    --_gorilla-button-subtle-hover: var(--gorilla-tertiary-subtle-hover);
+    --_gorilla-button-on-subtle: var(--gorilla-tertiary-on-subtle);
+    --_gorilla-button-role-border: var(--gorilla-tertiary-border);
+  }
+
+  :where(.gorilla-button.gorilla-color-neutral) {
+    --_gorilla-button-solid: var(--gorilla-neutral-solid);
+    --_gorilla-button-solid-hover: var(--gorilla-neutral-solid-hover);
+    --_gorilla-button-solid-active: var(--gorilla-neutral-solid-active);
+    --_gorilla-button-on-solid: var(--gorilla-neutral-on-solid);
+    --_gorilla-button-subtle: var(--gorilla-neutral-subtle);
+    --_gorilla-button-subtle-hover: var(--gorilla-neutral-subtle-hover);
+    --_gorilla-button-on-subtle: var(--gorilla-neutral-on-subtle);
+    --_gorilla-button-role-border: var(--gorilla-neutral-border);
+  }
+
+  :where(.gorilla-button.gorilla-color-success) {
+    --_gorilla-button-solid: var(--gorilla-success-solid);
+    --_gorilla-button-solid-hover: var(--gorilla-success-solid-hover);
+    --_gorilla-button-solid-active: var(--gorilla-success-solid-active);
+    --_gorilla-button-on-solid: var(--gorilla-success-on-solid);
+    --_gorilla-button-subtle: var(--gorilla-success-subtle);
+    --_gorilla-button-subtle-hover: var(--gorilla-success-subtle-hover);
+    --_gorilla-button-on-subtle: var(--gorilla-success-on-subtle);
+    --_gorilla-button-role-border: var(--gorilla-success-border);
+  }
+
+  :where(.gorilla-button.gorilla-color-warning) {
+    --_gorilla-button-solid: var(--gorilla-warning-solid);
+    --_gorilla-button-solid-hover: var(--gorilla-warning-solid-hover);
+    --_gorilla-button-solid-active: var(--gorilla-warning-solid-active);
+    --_gorilla-button-on-solid: var(--gorilla-warning-on-solid);
+    --_gorilla-button-subtle: var(--gorilla-warning-subtle);
+    --_gorilla-button-subtle-hover: var(--gorilla-warning-subtle-hover);
+    --_gorilla-button-on-subtle: var(--gorilla-warning-on-subtle);
+    --_gorilla-button-role-border: var(--gorilla-warning-border);
+  }
+
+  :where(.gorilla-button.gorilla-color-danger) {
+    --_gorilla-button-solid: var(--gorilla-danger-solid);
+    --_gorilla-button-solid-hover: var(--gorilla-danger-solid-hover);
+    --_gorilla-button-solid-active: var(--gorilla-danger-solid-active);
+    --_gorilla-button-on-solid: var(--gorilla-danger-on-solid);
+    --_gorilla-button-subtle: var(--gorilla-danger-subtle);
+    --_gorilla-button-subtle-hover: var(--gorilla-danger-subtle-hover);
+    --_gorilla-button-on-subtle: var(--gorilla-danger-on-subtle);
+    --_gorilla-button-role-border: var(--gorilla-danger-border);
+  }
+
+  :where(.gorilla-button.gorilla-color-info) {
+    --_gorilla-button-solid: var(--gorilla-info-solid);
+    --_gorilla-button-solid-hover: var(--gorilla-info-solid-hover);
+    --_gorilla-button-solid-active: var(--gorilla-info-solid-active);
+    --_gorilla-button-on-solid: var(--gorilla-info-on-solid);
+    --_gorilla-button-subtle: var(--gorilla-info-subtle);
+    --_gorilla-button-subtle-hover: var(--gorilla-info-subtle-hover);
+    --_gorilla-button-on-subtle: var(--gorilla-info-on-subtle);
+    --_gorilla-button-role-border: var(--gorilla-info-border);
+  }
+
+  /* Appearances and their interaction states. */
+  :where(.gorilla-button-filled) {
+    --_gorilla-button-background: var(--_gorilla-button-solid);
+    --_gorilla-button-color: var(--_gorilla-button-on-solid);
+    --_gorilla-button-border-color: transparent;
+    /* A glow in the role color. */
+    --_gorilla-button-shadow: 0 4px 14px
+      color-mix(in srgb, var(--_gorilla-button-solid) 35%, transparent);
+  }
+
+  :where(.gorilla-button-tonal) {
+    --_gorilla-button-background: var(--_gorilla-button-subtle);
+    --_gorilla-button-color: var(--_gorilla-button-on-subtle);
+    --_gorilla-button-border-color: transparent;
+    --_gorilla-button-shadow: 0 0 transparent;
+  }
+
+  :where(.gorilla-button-outlined) {
+    --_gorilla-button-background: transparent;
+    --_gorilla-button-color: var(--_gorilla-button-on-subtle);
+    --_gorilla-button-border-color: var(--_gorilla-button-role-border);
+    --_gorilla-button-border-width: 2px;
+    --_gorilla-button-shadow: 0 0 transparent;
+  }
+
+  :where(.gorilla-button-text) {
+    --_gorilla-button-background: transparent;
+    --_gorilla-button-color: var(--_gorilla-button-on-subtle);
+    --_gorilla-button-border-color: transparent;
+    --_gorilla-button-shadow: 0 0 transparent;
+  }
+
+  :where(.gorilla-button:hover:not(:disabled, .gorilla-button-disabled)) {
+    --_gorilla-button-transform: var(--gorilla-button-hover-transform, scale(1.03));
+  }
+
+  :where(.gorilla-button-filled:hover:not(:disabled, .gorilla-button-disabled)) {
+    --_gorilla-button-background: var(--_gorilla-button-solid-hover);
+  }
+
+  :where(.gorilla-button-tonal:hover:not(:disabled, .gorilla-button-disabled)) {
+    --_gorilla-button-background: var(--_gorilla-button-subtle-hover);
+  }
+
+  :where(
+    .gorilla-button-outlined:hover:not(:disabled, .gorilla-button-disabled),
+    .gorilla-button-text:hover:not(:disabled, .gorilla-button-disabled)
+  ) {
+    --_gorilla-button-background: var(--_gorilla-button-subtle);
+  }
+
+  :where(.gorilla-button:active:not(:disabled, .gorilla-button-disabled)) {
+    --_gorilla-button-transform: var(--gorilla-button-active-transform, scale(0.95));
+  }
+
+  :where(.gorilla-button-filled:active:not(:disabled, .gorilla-button-disabled)) {
+    --_gorilla-button-background: var(--_gorilla-button-solid-active);
+  }
+
+  :where(
+    .gorilla-button-tonal:active:not(:disabled, .gorilla-button-disabled),
+    .gorilla-button-outlined:active:not(:disabled, .gorilla-button-disabled),
+    .gorilla-button-text:active:not(:disabled, .gorilla-button-disabled)
+  ) {
+    --_gorilla-button-background: var(--_gorilla-button-subtle-hover);
+  }
+
+  /* Keyboard focus only: a pointer click does not show the ring. */
+  :where(.gorilla-button:focus-visible) {
+    outline-color: var(--gorilla-focus-ring);
+  }
+
+  /* Disabled by the `disabled` input, on `<button>` and on `<a>`. */
+  :where(.gorilla-button:disabled, .gorilla-button.gorilla-button-disabled) {
+    --_gorilla-button-color: var(--gorilla-text-disabled);
+    --_gorilla-button-shadow: 0 0 transparent;
+    cursor: not-allowed;
+  }
+
+  :where(
+    .gorilla-button-filled:disabled,
+    .gorilla-button-filled.gorilla-button-disabled,
+    .gorilla-button-tonal:disabled,
+    .gorilla-button-tonal.gorilla-button-disabled
+  ) {
+    --_gorilla-button-background: var(--gorilla-neutral-subtle);
+  }
+
+  :where(.gorilla-button-outlined:disabled, .gorilla-button-outlined.gorilla-button-disabled) {
+    --_gorilla-button-border-color: var(--gorilla-border-disabled);
+  }
+
+  /* Reduced motion wins over a `--gorilla-button-transition-duration` set by the app. */
+  @media (prefers-reduced-motion: reduce) {
+    :where(.gorilla-button) {
+      transition-duration: 0s;
+    }
+  }
+
+  /* Forced colors: the system draws the button; keep the focus ring and the disabled state. */
+  @media (forced-colors: active) {
+    /* The system paints a transparent outline, so there is no outline until keyboard focus. */
+    :where(.gorilla-button) {
+      outline-style: none;
+    }
+
+    :where(.gorilla-button:focus-visible) {
+      outline-style: solid;
+      outline-color: Highlight;
+    }
+
+    /* A disabled `<a>` would keep the link color: draw every disabled button in `GrayText`. */
+    :where(.gorilla-button:disabled, .gorilla-button.gorilla-button-disabled) {
+      forced-color-adjust: none;
+      background-color: Canvas;
+      border-color: GrayText;
+      color: GrayText;
+    }
+  }
+}

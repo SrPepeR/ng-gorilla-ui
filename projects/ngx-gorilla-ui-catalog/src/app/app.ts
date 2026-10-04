@@ -14,5 +14,6 @@ export class App {
     { path: '/', label: 'Getting started' },
     { path: '/theming', label: 'Theming' },
     { path: '/tokens', label: 'Tokens' },
+    { path: '/button', label: 'Button' },
   ];
 }

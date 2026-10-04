@@ -5,6 +5,9 @@
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "resolveJsonModule": true,
+    "paths": {
+      "ngx-gorilla-ui/*": ["./*/src/public-api.ts"]
+    },
     "types": ["vitest/globals", "@vitest/browser-playwright"]
   },
   "include": ["**/*.d.ts", "**/*.spec.ts"]

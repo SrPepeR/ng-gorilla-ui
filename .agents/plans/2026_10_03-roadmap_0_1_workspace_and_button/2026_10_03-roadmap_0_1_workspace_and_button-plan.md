@@ -17,7 +17,7 @@ implemented_by:
     version: "5.5"
     reasoning_effort: "low"
 
-last_implementation_at: "2026-10-03T13:50:00Z"
+last_implementation_at: "2026-10-04T10:30:00Z"
 has_completed_all_phases: "false"
 ---
 
@@ -76,7 +76,7 @@ Sustituir el workspace de `ngx-monkey-ui` por uno nuevo en Angular 22 con la lib
   - `directive GorillaVariant` (selector `[gorillaVariant]`, pensada para `hostDirectives`): inputs `variant` (por defecto `'default'`), `color` (por defecto `'primary'`), `size` (por defecto `'md'`); enlaza al host las clases `gorilla-variant-<variant>`, `gorilla-color-<color>` y `gorilla-size-<size>` con un `computed()`.
 - `ngx-gorilla-ui/button`:
   - `type GorillaButtonAppearance = 'filled' | 'tonal' | 'outlined' | 'text'`.
-  - `component GorillaButton`, selector `button[gorilla-button], a[gorilla-button]`, `OnPush`, `hostDirectives: [{ directive: GorillaVariant, inputs: ['variant', 'color', 'size'] }]`.
+  - `component GorillaButton`, selector `button[gorilla-button], a[gorilla-button]`, `OnPush`, `hostDirectives: [{ directive: GorillaVariant, inputs: ['variant', 'color', 'size'] }]` (`variant` se reenvía en la fase 5, cuando las otras variantes tienen estilos; hasta entonces solo `color` y `size`, por el E-14).
     - Inputs: `appearance: GorillaButtonAppearance` (por defecto `'filled'`) y `disabled: boolean` (`booleanAttribute`, por defecto `false`).
     - En `<button>`: refleja `disabled` en el atributo nativo. En `<a>`: pone `aria-disabled="true"`, `tabindex="-1"` y anula la navegación y los clics mientras está deshabilitado.
     - Sin outputs propios: se usa el `(click)` nativo.
@@ -88,7 +88,7 @@ Sustituir el workspace de `ngx-monkey-ui` por uno nuevo en Angular 22 con la lib
 - Superficies, texto, bordes e interacción: `--gorilla-background`, `--gorilla-surface`, `--gorilla-surface-raised`, `--gorilla-surface-overlay`, `--gorilla-scrim`, `--gorilla-text`, `--gorilla-text-muted`, `--gorilla-text-disabled`, `--gorilla-text-inverse`, `--gorilla-border`, `--gorilla-border-strong`, `--gorilla-border-disabled`, `--gorilla-focus-ring` y `--gorilla-selection`.
 - Escalas: `--gorilla-space-<n>`, `--gorilla-radius-<xs…xl|full>`, `--gorilla-shadow-<1…4>`, `--gorilla-font-family`, `--gorilla-font-size-<xs…xl>`, `--gorilla-font-weight-<regular|medium|bold>`, `--gorilla-line-height-<tight|normal>`, `--gorilla-control-height-<xs…xl>`.
 - Movimiento: `--gorilla-duration-<fast|normal|slow>` y `--gorilla-easing-<standard|emphasized|spring>`; con `prefers-reduced-motion: reduce` las duraciones valen `0s`.
-- Botón: `--gorilla-button-height`, `--gorilla-button-padding-inline`, `--gorilla-button-radius`, `--gorilla-button-gap`, `--gorilla-button-font-size`, `--gorilla-button-font-weight`, `--gorilla-button-background`, `--gorilla-button-color`, `--gorilla-button-border-color`, `--gorilla-button-border-width`, `--gorilla-button-shadow`, `--gorilla-button-transition-duration`.
+- Botón: `--gorilla-button-height`, `--gorilla-button-padding-inline`, `--gorilla-button-radius`, `--gorilla-button-gap`, `--gorilla-button-font-size`, `--gorilla-button-font-weight`, `--gorilla-button-background`, `--gorilla-button-color`, `--gorilla-button-border-color`, `--gorilla-button-border-width`, `--gorilla-button-shadow`, `--gorilla-button-hover-transform`, `--gorilla-button-active-transform`, `--gorilla-button-focus-ring-width`, `--gorilla-button-focus-ring-offset`, `--gorilla-button-transition-duration`.
 
 ### Suites de tests
 
@@ -184,24 +184,24 @@ Primer entry point real: los tokens en CSS y `GorillaTheme`. El catálogo muestr
 - [x] Entry point `ngx-gorilla-ui/theme` con `GorillaTheme`, `provideGorillaTheme()` y sus tipos, sin acceso directo a `window`, `document` ni `localStorage` (`DOCUMENT`, `isPlatformBrowser`). Ajustar el target `test` de la librería (`include`) y `tsconfig.lib.json` para que cubran las carpetas de los entry points secundarios, que quedan fuera de `src/`.
 - [x] Suites `gorilla-theme.spec.ts` y `tokens.spec.ts` con todos sus casos.
 - [x] Catálogo: `provideGorillaTheme()`, selector `Light`/`Dark`/`System` en la cabecera y páginas `Theming` (cómo usar el tema y sobrescribir tokens) y `Tokens` (paletas, roles con su contraste, escalas).
-- [ ] Revisar con el usuario las paletas en el catálogo y ajustar los pasos que no pasen AA. Las paletas se generan con `npm run tokens:palette` (`scripts/generate-palette.mjs`), que falla si un par no pasa AA.
+- [x] Revisar con el usuario las paletas en el catálogo y ajustar los pasos que no pasen AA. Las paletas se generan con `npm run tokens:palette` (`scripts/generate-palette.mjs`), que falla si un par no pasa AA.
 - [x] Marcar 1.1 y 1.2 en `docs/ROADMAP.md` y añadir la entrada en `CHANGELOG.md`.
 - [x] Verify the changes in terms of typechecking, linting and tests using the project's verification command (`npm run verify`). Fix issues if any.
-- [ ] STOP. Present the changes to the user for review and suggest pull request titles. Do NOT proceed to the next phase until the user explicitly asks.
+- [x] STOP. Present the changes to the user for review and suggest pull request titles. Do NOT proceed to the next phase until the user explicitly asks.
 
 ### Fase 4: directiva de variante y botón `default`
 
 La directiva `GorillaVariant` y el botón completo en la variante `default`: ocho colores, cinco tamaños, cuatro apariencias, `disabled` y transiciones. El aspecto de `default` se elige entre propuestas en el catálogo.
 
-- [ ] Crear la rama `feat/button` desde `release/0.1.0`.
-- [ ] Entry point `ngx-gorilla-ui/core` con `GorillaVariant` y sus tipos, y la suite `gorilla-variant.spec.ts`.
-- [ ] Entry point `ngx-gorilla-ui/button` con `GorillaButton` sobre `button` y `a`, estilos en `@layer gorilla` con selectores `:where()`, variables propias `--gorilla-button-*` y transiciones con los tokens de movimiento.
-- [ ] Implementar 2 o 3 propuestas de la variante `default` (por ejemplo suave y redondeada, geométrica y nítida, expresiva y tonal) en una página temporal del catálogo; el usuario elige una y se borran las demás.
-- [ ] Suite `gorilla-button.spec.ts` con todos sus casos.
-- [ ] `size-limit` con `@size-limit/file` sobre el build de cada entry point (`core`, `theme`, `button`): medir y fijar el límite con un 10 % de margen; script `size` en `verify` y en la CI.
-- [ ] Página `Button` del catálogo con ejemplos de colores, tamaños, apariencias y `disabled` (la documentación completa llega en la fase 7).
-- [ ] Añadir la entrada en `CHANGELOG.md` y marcar 1.3 en `docs/ROADMAP.md` (1.4 se marca en la fase 5).
-- [ ] Verify the changes in terms of typechecking, linting and tests using the project's verification command (`npm run verify`). Fix issues if any.
+- [x] Crear la rama `feat/button` desde `release/0.1.0`.
+- [x] Entry point `ngx-gorilla-ui/core` con `GorillaVariant` y sus tipos, y la suite `gorilla-variant.spec.ts`.
+- [x] Entry point `ngx-gorilla-ui/button` con `GorillaButton` sobre `button` y `a`, estilos en `@layer gorilla` con selectores `:where()`, variables propias `--gorilla-button-*` y transiciones con los tokens de movimiento.
+- [x] Implementar 2 o 3 propuestas de la variante `default` (por ejemplo suave y redondeada, geométrica y nítida, expresiva y tonal) en una página temporal del catálogo; el usuario elige una y se borran las demás. Elegida la C (expresiva y tonal) con esquinas de `--gorilla-radius-md` en lugar de píldora.
+- [x] Suite `gorilla-button.spec.ts` con todos sus casos.
+- [x] `size-limit` con `@size-limit/file` sobre el build de cada entry point (`core`, `theme`, `button`): medir y fijar el límite con un 10 % de margen; script `size` en `verify` y en la CI.
+- [x] Página `Button` del catálogo con ejemplos de colores, tamaños, apariencias y `disabled` (la documentación completa llega en la fase 7).
+- [x] Añadir la entrada en `CHANGELOG.md` y marcar 1.3 en `docs/ROADMAP.md` (1.4 se marca en la fase 5).
+- [x] Verify the changes in terms of typechecking, linting and tests using the project's verification command (`npm run verify`). Fix issues if any.
 - [ ] STOP. Present the changes to the user for review and suggest pull request titles. Do NOT proceed to the next phase until the user explicitly asks.
 
 ### Fase 5: las otras cinco variantes
@@ -209,6 +209,7 @@ La directiva `GorillaVariant` y el botón completo en la variante `default`: och
 Añade `brutalist`, `glass`, `material`, `minimal` y `swift` al botón, cada una con su forma, elevación, bordes y movimiento, leyendo los mismos tokens de color.
 
 - [ ] Crear la rama `feat/button-variants` desde `release/0.1.0`.
+- [ ] Reenviar el input `variant` en los `hostDirectives` de `GorillaButton` y documentarlo en la página `Button`.
 - [ ] `brutalist`: bordes gruesos, sombra sólida desplazada sin desenfoque, esquinas rectas, negrita (partiendo del legacy: 2 px y 8 px), con la sombra que se recoge al pulsar.
 - [ ] `glass`: fondo translúcido con `backdrop-filter` (partiendo de `blur(30px)` y radio 15 px), borde fino claro, y fondo opaco de respaldo con `@supports not (backdrop-filter: blur(1px))` y con `prefers-reduced-transparency: reduce`.
 - [ ] `material`: forma de Material 3 Expressive (píldora que se cuadra al pulsar), capa de estado con opacidad para hover, foco y pulsación, elevación tonal y curva de muelle.
