@@ -54,10 +54,10 @@ class Page {
   // The markup a disabled link gets from the server: the owned values and the author's ones.
   template: `<a
     gorilla-button
-    href="#target"
+    role="link"
     tabindex="-1"
     aria-disabled="true"
-    data-gorilla-author='{"tabindex":"4","aria-disabled":null}'
+    data-gorilla-author='{"href":"#target","role":null,"tabindex":"4","aria-disabled":null}'
     [disabled]="disabled()"
     >Hydrated</a
   >`,
@@ -156,31 +156,41 @@ describe('GorillaButton', () => {
     expect(page.clicks()).toBe(1);
   });
 
-  it('on `<a>`, sets `aria-disabled` and `tabindex="-1"` and blocks navigation while disabled', async () => {
+  it('on `<a>`, removes `href`, sets `role="link"`, `aria-disabled` and `tabindex="-1"` and blocks navigation while disabled', async () => {
     const { fixture, page, link } = await render();
+    expect(link.getAttribute('href')).toBe('#target');
     expect(link.hasAttribute('aria-disabled')).toBe(false);
     expect(link.hasAttribute('tabindex')).toBe(false);
 
     page.disabled.set(true);
     await fixture.whenStable();
+    expect(link.hasAttribute('href')).toBe(false);
+    expect(link.getAttribute('role')).toBe('link');
     expect(link.getAttribute('aria-disabled')).toBe('true');
     expect(link.getAttribute('tabindex')).toBe('-1');
     expect(JSON.parse(link.getAttribute('data-gorilla-author') ?? '')).toEqual({
+      href: '#target',
+      role: null,
       tabindex: null,
       'aria-disabled': null,
     });
 
+    // Without `href`, no activation navigates: click, middle click or `Enter`.
     const hash = location.hash;
     const click = new MouseEvent('click', { bubbles: true, cancelable: true });
     link.dispatchEvent(click);
+    link.dispatchEvent(new MouseEvent('auxclick', { bubbles: true, cancelable: true, button: 1 }));
     expect(click.defaultPrevented).toBe(true);
     expect(location.hash).toBe(hash);
     expect(page.clicks()).toBe(0);
 
     page.disabled.set(false);
     await fixture.whenStable();
+    expect(link.getAttribute('href')).toBe('#target');
+    expect(link.hasAttribute('role')).toBe(false);
     expect(link.hasAttribute('aria-disabled')).toBe(false);
     expect(link.hasAttribute('tabindex')).toBe(false);
+    expect(link.hasAttribute('data-gorilla-author')).toBe(false);
   });
 
   it('on `<a>`, restores the author `tabindex` and `aria-disabled` current at the time of disabling', async () => {
@@ -241,19 +251,42 @@ describe('GorillaButton', () => {
 
     fixture.componentInstance.disabled.set(false);
     await fixture.whenStable();
+    expect(link.getAttribute('href')).toBe('#target');
+    expect(link.hasAttribute('role')).toBe(false);
     expect(link.getAttribute('tabindex')).toBe('4');
     expect(link.hasAttribute('aria-disabled')).toBe(false);
     expect(link.hasAttribute('data-gorilla-author')).toBe(false);
   });
 
-  it('reads the hover and press transforms from `--gorilla-button-*-transform`', async () => {
+  it('reads the hover and press transforms from `--gorilla-button-*-transform` and darkens while pressed', async () => {
     const { button } = await render();
     button.style.setProperty('--gorilla-button-hover-transform', 'translateY(-2px)');
+    button.style.setProperty('--gorilla-button-active-transform', 'translateY(2px)');
     button.style.setProperty('--gorilla-button-transition-duration', '0s');
+    const resolve = (token: string) => {
+      const probe = document.createElement('span');
+      probe.style.color = `var(${token})`;
+      document.body.append(probe);
+      const color = getComputedStyle(probe).color;
+      probe.remove();
+      return color;
+    };
 
     await userEvent.hover(button);
     expect(getComputedStyle(button).transform).toBe('matrix(1, 0, 0, 1, 0, -2)');
+    expect(getComputedStyle(button).backgroundColor).toBe(resolve('--gorilla-primary-solid-hover'));
     await userEvent.unhover(button);
+    expect(getComputedStyle(button).transform).toBe('none');
+
+    // Holding Space on the focused button keeps it `:active`.
+    button.focus();
+    await userEvent.keyboard('[Space>]');
+    expect(button.matches(':active')).toBe(true);
+    expect(getComputedStyle(button).transform).toBe('matrix(1, 0, 0, 1, 0, 2)');
+    expect(getComputedStyle(button).backgroundColor).toBe(
+      resolve('--gorilla-primary-solid-active'),
+    );
+    await userEvent.keyboard('[/Space]');
     expect(getComputedStyle(button).transform).toBe('none');
   });
 

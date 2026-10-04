@@ -68,8 +68,9 @@
   <h2 id="disabled-title">Disabled</h2>
   <p>
     <code>disabled</code> sets the native attribute on <code>&lt;button&gt;</code>. On
-    <code>&lt;a&gt;</code> it sets <code>aria-disabled="true"</code> and
-    <code>tabindex="-1"</code> and blocks the navigation. In both cases no click handler runs.
+    <code>&lt;a&gt;</code> it removes <code>href</code>, so nothing navigates, and sets
+    <code>role="link"</code>, <code>aria-disabled="true"</code> and <code>tabindex="-1"</code>. In
+    both cases no click handler runs.
   </p>
   <div class="row">
     @for (appearance of appearances; track appearance) {
@@ -170,8 +171,10 @@
       inside a form that do not submit it.
     </li>
     <li>
-      A disabled <code>&lt;a&gt;</code> gets <code>aria-disabled="true"</code> and
-      <code>tabindex="-1"</code>; your own values of those attributes come back when it is enabled.
+      A disabled <code>&lt;a&gt;</code> loses its <code>href</code> and gets
+      <code>role="link"</code>, <code>aria-disabled="true"</code> and <code>tabindex="-1"</code>, so
+      it is still announced as a link; your own values of those attributes come back when it is
+      enabled, also after server-side rendering.
     </li>
     <li>The focus ring only shows on keyboard focus (<code>:focus-visible</code>).</li>
     <li>

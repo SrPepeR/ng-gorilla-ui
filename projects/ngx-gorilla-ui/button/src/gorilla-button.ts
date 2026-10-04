@@ -48,7 +48,10 @@ export type GorillaButtonAppearance = 'filled' | 'tonal' | 'outlined' | 'text';
 export class GorillaButton {
   /** Emphasis: `filled` (default), `tonal`, `outlined` or `text`. */
   readonly appearance = input<GorillaButtonAppearance>('filled');
-  /** Disables the button: no focus by `Tab` on `<a>` and no click handlers on either element. */
+  /**
+   * Disables the button: no click handlers on either element, and on `<a>` no `href` (so no
+   * navigation of any kind) and no focus by `Tab`.
+   */
   readonly disabled = input(false, { transform: booleanAttribute });
 
   protected readonly isButton: boolean;
@@ -69,8 +72,9 @@ export class GorillaButton {
     };
     element.addEventListener('click', blockWhileDisabled, { capture: true });
 
-    // On `<a>`, `disabled` takes over `aria-disabled` and `tabindex`. The author's values are kept
-    // aside while disabled (also the ones they set or bind later) and come back on re-enable.
+    // On `<a>`, `disabled` takes over `href`, `role`, `aria-disabled` and `tabindex`. The author's
+    // values are kept aside while disabled (also the ones they set or bind later) and come back on
+    // re-enable.
     const observer = this.isButton ? null : this.manageDisabledLink(element);
     inject(DestroyRef).onDestroy(() => {
       observer?.disconnect();
@@ -79,7 +83,10 @@ export class GorillaButton {
   }
 
   /**
-   * Swaps the author's `tabindex` and `aria-disabled` of an `<a>` for the disabled ones and back.
+   * Swaps the author's attributes of an `<a>` for the disabled ones and back.
+   *
+   * Without `href` nothing can navigate (middle click, context menu, `Enter`), and `role="link"`
+   * keeps it announced as a link, now with `aria-disabled="true"` and out of the tab order.
    *
    * The author's values also live in `data-gorilla-author` while disabled, so a link rendered
    * disabled on the server finds them on hydration instead of reading the disabled ones. Returns
@@ -87,7 +94,12 @@ export class GorillaButton {
    * `MutationObserver`.
    */
   private manageDisabledLink(element: HTMLElement): MutationObserver | null {
-    const owned: Record<string, string> = { tabindex: '-1', 'aria-disabled': 'true' };
+    const owned: Record<string, string | null> = {
+      href: null,
+      role: 'link',
+      tabindex: '-1',
+      'aria-disabled': 'true',
+    };
     const marker = 'data-gorilla-author';
     const authorValues = new Map<string, string | null>();
     const renderer = inject(Renderer2);
