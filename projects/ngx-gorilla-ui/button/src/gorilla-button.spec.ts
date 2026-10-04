@@ -18,7 +18,13 @@ import { GorillaButton, GorillaButtonAppearance } from './gorilla-button';
     >
       <span class="label">Save</span>
     </button>
-    <a gorilla-button href="#target" [disabled]="disabled()" (click)="clicks.set(clicks() + 1)"
+    <a
+      gorilla-button
+      href="#target"
+      [disabled]="disabled()"
+      [attr.tabindex]="linkTabIndex()"
+      [attr.aria-disabled]="linkAriaDisabled()"
+      (click)="clicks.set(clicks() + 1)"
       >Link</a
     >
     <button
@@ -39,6 +45,8 @@ class Page {
   readonly appearance = signal<GorillaButtonAppearance>('filled');
   readonly disabled = signal(false);
   readonly clicks = signal(0);
+  readonly linkTabIndex = signal<string | null>(null);
+  readonly linkAriaDisabled = signal<string | null>(null);
 }
 
 describe('GorillaButton', () => {
@@ -166,6 +174,25 @@ describe('GorillaButton', () => {
     page.disabled.set(false);
     await fixture.whenStable();
     expect(link.getAttribute('tabindex')).toBe('3');
+    expect(link.getAttribute('aria-disabled')).toBe('false');
+  });
+
+  it('on `<a>`, keeps `tabindex` and `aria-disabled` while disabled when author bindings change them', async () => {
+    const { fixture, page, link } = await render();
+    page.disabled.set(true);
+    await fixture.whenStable();
+
+    page.linkTabIndex.set('5');
+    page.linkAriaDisabled.set('false');
+    await fixture.whenStable();
+    // The attribute observer runs in a microtask after the bindings write.
+    await Promise.resolve();
+    expect(link.getAttribute('tabindex')).toBe('-1');
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+
+    page.disabled.set(false);
+    await fixture.whenStable();
+    expect(link.getAttribute('tabindex')).toBe('5');
     expect(link.getAttribute('aria-disabled')).toBe('false');
   });
 

@@ -69,35 +69,50 @@ export class GorillaButton {
     };
     element.addEventListener('click', blockWhileDisabled, { capture: true });
 
-    // On `<a>`, `disabled` takes over `aria-disabled` and `tabindex`. The author's values are read
-    // right before disabling, so the ones set or bound after creation come back on re-enable.
+    // On `<a>`, `disabled` takes over `aria-disabled` and `tabindex`. The author's values are kept
+    // aside while disabled (also the ones they set or bind later) and come back on re-enable.
+    const owned: Record<string, string> = { tabindex: '-1', 'aria-disabled': 'true' };
+    const authorValues = new Map<string, string | null>();
+    const renderer = inject(Renderer2);
+    const write = (name: string, value: string | null) =>
+      value === null
+        ? renderer.removeAttribute(element, name)
+        : renderer.setAttribute(element, name, value);
+    // Watches the author's writes while disabled; there is no `MutationObserver` on the server.
+    const keepOwned = (records: MutationRecord[]) => {
+      for (const { attributeName } of records) {
+        const value = attributeName && element.getAttribute(attributeName);
+        if (attributeName && value !== owned[attributeName]) {
+          authorValues.set(attributeName, value ?? null);
+          write(attributeName, owned[attributeName]);
+        }
+      }
+    };
+    const observer =
+      typeof MutationObserver === 'undefined' ? null : new MutationObserver(keepOwned);
+
     if (!this.isButton) {
-      const renderer = inject(Renderer2);
-      const restore = (name: string, value: string | null) =>
-        value === null
-          ? renderer.removeAttribute(element, name)
-          : renderer.setAttribute(element, name, value);
-      let authorAttributes: { tabindex: string | null; ariaDisabled: string | null } | null = null;
       effect(() => {
         const disabled = this.disabled();
         untracked(() => {
-          if (disabled && !authorAttributes) {
-            authorAttributes = {
-              tabindex: element.getAttribute('tabindex'),
-              ariaDisabled: element.getAttribute('aria-disabled'),
-            };
-            renderer.setAttribute(element, 'aria-disabled', 'true');
-            renderer.setAttribute(element, 'tabindex', '-1');
-          } else if (!disabled && authorAttributes) {
-            restore('tabindex', authorAttributes.tabindex);
-            restore('aria-disabled', authorAttributes.ariaDisabled);
-            authorAttributes = null;
+          if (disabled && authorValues.size === 0) {
+            for (const name of Object.keys(owned)) {
+              authorValues.set(name, element.getAttribute(name));
+              write(name, owned[name]);
+            }
+            observer?.observe(element, { attributeFilter: Object.keys(owned) });
+          } else if (!disabled && authorValues.size > 0) {
+            keepOwned(observer?.takeRecords() ?? []);
+            observer?.disconnect();
+            authorValues.forEach((value, name) => write(name, value));
+            authorValues.clear();
           }
         });
       });
     }
-    inject(DestroyRef).onDestroy(() =>
-      element.removeEventListener('click', blockWhileDisabled, { capture: true }),
-    );
+    inject(DestroyRef).onDestroy(() => {
+      observer?.disconnect();
+      element.removeEventListener('click', blockWhileDisabled, { capture: true });
+    });
   }
 }
