@@ -6,7 +6,7 @@
       "runtimeExecutable": "bash",
       "runtimeArgs": [
         "-c",
-        "if [ -s \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" ]; then . \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use; fi; exec npm run start"
+        "if [ -s \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" ]; then . \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use || exit 1; fi; exec npm run start"
       ],
       "port": 4200
     }
