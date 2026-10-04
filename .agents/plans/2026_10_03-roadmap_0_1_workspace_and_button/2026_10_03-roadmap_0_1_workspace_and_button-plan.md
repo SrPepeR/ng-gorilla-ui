@@ -17,7 +17,7 @@ implemented_by:
     version: "5.5"
     reasoning_effort: "low"
 
-last_implementation_at: "2026-10-04T09:45:00Z"
+last_implementation_at: "2026-10-04T10:30:00Z"
 has_completed_all_phases: "false"
 ---
 
@@ -196,12 +196,12 @@ La directiva `GorillaVariant` y el botón completo en la variante `default`: och
 - [x] Crear la rama `feat/button` desde `release/0.1.0`.
 - [x] Entry point `ngx-gorilla-ui/core` con `GorillaVariant` y sus tipos, y la suite `gorilla-variant.spec.ts`.
 - [x] Entry point `ngx-gorilla-ui/button` con `GorillaButton` sobre `button` y `a`, estilos en `@layer gorilla` con selectores `:where()`, variables propias `--gorilla-button-*` y transiciones con los tokens de movimiento.
-- [ ] Implementar 2 o 3 propuestas de la variante `default` (por ejemplo suave y redondeada, geométrica y nítida, expresiva y tonal) en una página temporal del catálogo; el usuario elige una y se borran las demás.
+- [x] Implementar 2 o 3 propuestas de la variante `default` (por ejemplo suave y redondeada, geométrica y nítida, expresiva y tonal) en una página temporal del catálogo; el usuario elige una y se borran las demás. Elegida la C (expresiva y tonal) con esquinas de `--gorilla-radius-md` en lugar de píldora.
 - [x] Suite `gorilla-button.spec.ts` con todos sus casos.
-- [ ] `size-limit` con `@size-limit/file` sobre el build de cada entry point (`core`, `theme`, `button`): medir y fijar el límite con un 10 % de margen; script `size` en `verify` y en la CI.
-- [ ] Página `Button` del catálogo con ejemplos de colores, tamaños, apariencias y `disabled` (la documentación completa llega en la fase 7).
-- [ ] Añadir la entrada en `CHANGELOG.md` y marcar 1.3 en `docs/ROADMAP.md` (1.4 se marca en la fase 5).
-- [ ] Verify the changes in terms of typechecking, linting and tests using the project's verification command (`npm run verify`). Fix issues if any.
+- [x] `size-limit` con `@size-limit/file` sobre el build de cada entry point (`core`, `theme`, `button`): medir y fijar el límite con un 10 % de margen; script `size` en `verify` y en la CI.
+- [x] Página `Button` del catálogo con ejemplos de colores, tamaños, apariencias y `disabled` (la documentación completa llega en la fase 7).
+- [x] Añadir la entrada en `CHANGELOG.md` y marcar 1.3 en `docs/ROADMAP.md` (1.4 se marca en la fase 5).
+- [x] Verify the changes in terms of typechecking, linting and tests using the project's verification command (`npm run verify`). Fix issues if any.
 - [ ] STOP. Present the changes to the user for review and suggest pull request titles. Do NOT proceed to the next phase until the user explicitly asks.
 
 ### Fase 5: las otras cinco variantes

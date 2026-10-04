@@ -65,7 +65,8 @@ Requirements: Node 24 (see `.nvmrc`) and, the first time, the Chromium build use
 | `npm run test:watch` | Runs the library unit tests in watch mode. |
 | `npm run lint` | Lints TypeScript and templates, including the accessibility rules. |
 | `npm run format` | Formats the code with Prettier. |
-| `npm run verify` | Everything CI checks: lint, format, tests, and build. Run it before opening a pull request. |
+| `npm run size` | Checks the size budget of each entry point against the last build. |
+| `npm run verify` | Everything CI checks: lint, format, tests, build, and size budgets. Run it before opening a pull request. |
 
 ## Commits
 

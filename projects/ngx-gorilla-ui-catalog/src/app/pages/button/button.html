@@ -2,52 +2,62 @@
 
 <p>
   <code>gorilla-button</code> goes on the native <code>&lt;button&gt;</code> or
-  <code>&lt;a&gt;</code> element. Before the examples, the look of the <code>default</code> variant
-  is being chosen among these proposals. Switch the theme in the header to compare them in light and
-  dark, and use <kbd>Tab</kbd> to see the focus ring.
+  <code>&lt;a&gt;</code> element, with no wrapper, so the element keeps its own semantics, keyboard
+  behavior and attributes. Switch the theme in the header to see both versions, and use
+  <kbd>Tab</kbd> to see the focus ring.
 </p>
 
-@for (proposal of proposals; track proposal.id) {
-  <section
-    class="proposal"
-    [class]="'proposal-' + proposal.id"
-    [attr.aria-labelledby]="proposal.id + '-title'"
-  >
-    <h2 [id]="proposal.id + '-title'">{{ proposal.name }}</h2>
-    <p class="muted">{{ proposal.description }}</p>
+<pre><code>{{ usageSnippet }}</code></pre>
 
-    <div class="matrix" role="group" [attr.aria-label]="proposal.name + ': colors by appearance'">
-      <span></span>
+<section aria-labelledby="colors-title">
+  <h2 id="colors-title">Colors and appearances</h2>
+  <p>
+    <code>color</code> picks one of the eight roles and <code>appearance</code> its emphasis:
+    <code>filled</code> (default), <code>tonal</code>, <code>outlined</code> or <code>text</code>.
+  </p>
+  <div class="matrix" role="group" aria-label="Colors by appearance">
+    <span></span>
+    @for (appearance of appearances; track appearance) {
+      <span class="heading">{{ appearance }}</span>
+    }
+    @for (color of colors; track color) {
+      <span class="heading">{{ color }}</span>
       @for (appearance of appearances; track appearance) {
-        <span class="heading">{{ appearance }}</span>
+        <span>
+          <button gorilla-button type="button" [color]="color" [appearance]="appearance">
+            Button
+          </button>
+        </span>
       }
-      @for (color of colors; track color) {
-        <span class="heading">{{ color }}</span>
-        @for (appearance of appearances; track appearance) {
-          <span>
-            <button gorilla-button type="button" [color]="color" [appearance]="appearance">
-              Button
-            </button>
-          </span>
-        }
-      }
-    </div>
+    }
+  </div>
+</section>
 
-    <h3>Sizes</h3>
-    <div class="row">
-      @for (size of sizes; track size) {
-        <button gorilla-button type="button" [size]="size">Size {{ size }}</button>
-      }
-    </div>
+<section aria-labelledby="sizes-title">
+  <h2 id="sizes-title">Sizes</h2>
+  <p>
+    <code>size</code> goes from <code>xs</code> to <code>xl</code>; the default is <code>md</code>.
+  </p>
+  <div class="row">
+    @for (size of sizes; track size) {
+      <button gorilla-button type="button" [size]="size">Size {{ size }}</button>
+    }
+  </div>
+</section>
 
-    <h3>Disabled</h3>
-    <div class="row">
-      @for (appearance of appearances; track appearance) {
-        <button gorilla-button type="button" [appearance]="appearance" disabled>
-          {{ appearance }}
-        </button>
-      }
-      <a gorilla-button href="#" appearance="outlined" disabled>Disabled link</a>
-    </div>
-  </section>
-}
+<section aria-labelledby="disabled-title">
+  <h2 id="disabled-title">Disabled</h2>
+  <p>
+    <code>disabled</code> sets the native attribute on <code>&lt;button&gt;</code>. On
+    <code>&lt;a&gt;</code> it sets <code>aria-disabled="true"</code> and
+    <code>tabindex="-1"</code> and blocks the navigation. In both cases no click handler runs.
+  </p>
+  <div class="row">
+    @for (appearance of appearances; track appearance) {
+      <button gorilla-button type="button" [appearance]="appearance" disabled>
+        {{ appearance }}
+      </button>
+    }
+    <a gorilla-button href="#" appearance="outlined" disabled>Disabled link</a>
+  </div>
+</section>

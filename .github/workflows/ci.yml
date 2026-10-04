@@ -57,3 +57,6 @@ jobs:
 
       - name: Build library and catalog
         run: npm run build
+
+      - name: Check the size of each entry point
+        run: npm run size

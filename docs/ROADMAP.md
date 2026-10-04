@@ -33,7 +33,7 @@ Hoja de ruta de `ngx-gorilla-ui`. El porqué de cada decisión, las premisas, lo
     - Si el botón tiene niveles de énfasis (`appearance`: `filled`, `tonal`, `outlined`, `text`).
   - [x] 1.1. Tokens: paletas primitivas y tokens semánticos de color (ver [Colores](./PROPUESTA-NGX-GORILLA-UI.md#colores) en la propuesta), escala de tamaños `xs` a `xl`, radios, sombras, espaciado, tipografía y movimiento (duraciones a 0 con `prefers-reduced-motion`), con `light-dark()` y en `@layer gorilla`.
   - [x] 1.2. `GorillaTheme`: `theme` como señal, `setTheme('light' | 'dark' | 'system')` con `system` por defecto, persistencia y seguimiento del sistema, sin acceso directo a `window` (los tests del E-11 como criterio).
-  - [ ] 1.3. Directiva `GorillaVariant` (`color`, `variant`, `size`) aplicada con `hostDirectives`.
+  - [x] 1.3. Directiva `GorillaVariant` (`color`, `variant`, `size`) aplicada con `hostDirectives`.
   - [ ] 1.4. `gorilla-button` en las seis variantes, los ocho roles de color y los cinco tamaños, con `disabled` (los tests del E-22 y E-24 como criterio). Fijar su límite de tamaño en el CI.
   - [ ] 1.5. Comprobados para el botón en los dos temas:
     - `:focus-visible` y contraste AA.

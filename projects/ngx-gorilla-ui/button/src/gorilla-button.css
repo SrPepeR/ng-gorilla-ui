@@ -21,9 +21,9 @@
     margin: 0;
     padding-block: 0;
     padding-inline: var(--gorilla-button-padding-inline, var(--_gorilla-button-padding-inline));
-    border: var(--gorilla-button-border-width, 1px) solid
+    border: var(--gorilla-button-border-width, var(--_gorilla-button-border-width)) solid
       var(--gorilla-button-border-color, var(--_gorilla-button-border-color));
-    border-radius: var(--gorilla-button-radius, var(--gorilla-radius-lg));
+    border-radius: var(--gorilla-button-radius, var(--gorilla-radius-md));
     outline: 2px solid transparent;
     outline-offset: 2px;
     background-color: var(--gorilla-button-background, var(--_gorilla-button-background));
@@ -31,7 +31,7 @@
     color: var(--gorilla-button-color, var(--_gorilla-button-color));
     font-family: var(--gorilla-font-family);
     font-size: var(--gorilla-button-font-size, var(--_gorilla-button-font-size));
-    font-weight: var(--gorilla-button-font-weight, var(--gorilla-font-weight-medium));
+    font-weight: var(--gorilla-button-font-weight, var(--gorilla-font-weight-bold));
     line-height: var(--gorilla-line-height-tight);
     text-align: center;
     text-decoration: none;
@@ -42,13 +42,18 @@
     transform: var(--_gorilla-button-transform, none);
     transition-property:
       background-color, color, border-color, box-shadow, outline-color, transform;
-    transition-duration: var(--gorilla-button-transition-duration, var(--gorilla-duration-fast));
-    transition-timing-function: var(--gorilla-easing-standard);
+    transition-duration: var(--gorilla-button-transition-duration, var(--gorilla-duration-normal));
+    /* Colors ease in; the scale on hover and press springs. */
+    transition-timing-function:
+      var(--gorilla-easing-standard), var(--gorilla-easing-standard),
+      var(--gorilla-easing-standard), var(--gorilla-easing-standard),
+      var(--gorilla-easing-standard), var(--gorilla-easing-spring);
 
     /* Defaults for `size="md"`, `color="primary"` and `appearance="filled"`. */
     --_gorilla-button-height: var(--gorilla-control-height-md);
-    --_gorilla-button-padding-inline: var(--gorilla-space-4);
+    --_gorilla-button-padding-inline: var(--gorilla-space-6);
     --_gorilla-button-font-size: var(--gorilla-font-size-md);
+    --_gorilla-button-border-width: 1px;
     --_gorilla-button-solid: var(--gorilla-primary-solid);
     --_gorilla-button-solid-hover: var(--gorilla-primary-solid-hover);
     --_gorilla-button-solid-active: var(--gorilla-primary-solid-active);
@@ -62,19 +67,19 @@
   /* Sizes. */
   :where(.gorilla-button.gorilla-size-xs) {
     --_gorilla-button-height: var(--gorilla-control-height-xs);
-    --_gorilla-button-padding-inline: var(--gorilla-space-2);
+    --_gorilla-button-padding-inline: var(--gorilla-space-4);
     --_gorilla-button-font-size: var(--gorilla-font-size-xs);
   }
 
   :where(.gorilla-button.gorilla-size-sm) {
     --_gorilla-button-height: var(--gorilla-control-height-sm);
-    --_gorilla-button-padding-inline: var(--gorilla-space-3);
+    --_gorilla-button-padding-inline: var(--gorilla-space-4);
     --_gorilla-button-font-size: var(--gorilla-font-size-sm);
   }
 
   :where(.gorilla-button.gorilla-size-lg) {
     --_gorilla-button-height: var(--gorilla-control-height-lg);
-    --_gorilla-button-padding-inline: var(--gorilla-space-5);
+    --_gorilla-button-padding-inline: var(--gorilla-space-6);
     --_gorilla-button-font-size: var(--gorilla-font-size-lg);
   }
 
@@ -167,7 +172,9 @@
     --_gorilla-button-background: var(--_gorilla-button-solid);
     --_gorilla-button-color: var(--_gorilla-button-on-solid);
     --_gorilla-button-border-color: transparent;
-    --_gorilla-button-shadow: var(--gorilla-shadow-1);
+    /* A glow in the role color. */
+    --_gorilla-button-shadow: 0 4px 14px
+      color-mix(in srgb, var(--_gorilla-button-solid) 35%, transparent);
   }
 
   :where(.gorilla-button-tonal) {
@@ -181,6 +188,7 @@
     --_gorilla-button-background: transparent;
     --_gorilla-button-color: var(--_gorilla-button-on-subtle);
     --_gorilla-button-border-color: var(--_gorilla-button-role-border);
+    --_gorilla-button-border-width: 2px;
     --_gorilla-button-shadow: 0 0 transparent;
   }
 
@@ -192,12 +200,11 @@
   }
 
   :where(.gorilla-button:hover:not(:disabled, [aria-disabled='true'])) {
-    --_gorilla-button-transform: translateY(-1px);
+    --_gorilla-button-transform: scale(1.03);
   }
 
   :where(.gorilla-button-filled:hover:not(:disabled, [aria-disabled='true'])) {
     --_gorilla-button-background: var(--_gorilla-button-solid-hover);
-    --_gorilla-button-shadow: var(--gorilla-shadow-2);
   }
 
   :where(.gorilla-button-tonal:hover:not(:disabled, [aria-disabled='true'])) {
@@ -212,12 +219,11 @@
   }
 
   :where(.gorilla-button:active:not(:disabled, [aria-disabled='true'])) {
-    --_gorilla-button-transform: scale(0.98);
+    --_gorilla-button-transform: scale(0.95);
   }
 
   :where(.gorilla-button-filled:active:not(:disabled, [aria-disabled='true'])) {
     --_gorilla-button-background: var(--_gorilla-button-solid-active);
-    --_gorilla-button-shadow: var(--gorilla-shadow-1);
   }
 
   :where(

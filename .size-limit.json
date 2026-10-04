@@ -1,0 +1,17 @@
+[
+  {
+    "name": "ngx-gorilla-ui/core",
+    "path": "dist/ngx-gorilla-ui/fesm2022/ngx-gorilla-ui-core.mjs",
+    "limit": "720 B"
+  },
+  {
+    "name": "ngx-gorilla-ui/theme",
+    "path": "dist/ngx-gorilla-ui/fesm2022/ngx-gorilla-ui-theme.mjs",
+    "limit": "1.22 kB"
+  },
+  {
+    "name": "ngx-gorilla-ui/button",
+    "path": "dist/ngx-gorilla-ui/fesm2022/ngx-gorilla-ui-button.mjs",
+    "limit": "2.45 kB"
+  }
+]
