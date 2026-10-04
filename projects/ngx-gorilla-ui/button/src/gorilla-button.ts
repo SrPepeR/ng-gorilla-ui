@@ -4,10 +4,12 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   ElementRef,
-  HostAttributeToken,
   inject,
   input,
+  Renderer2,
+  untracked,
   ViewEncapsulation,
 } from '@angular/core';
 import { GorillaVariant } from 'ngx-gorilla-ui/core';
@@ -23,7 +25,7 @@ export type GorillaButtonAppearance = 'filled' | 'tonal' | 'outlined' | 'text';
  * <a gorilla-button appearance="text" href="/docs">Docs</a>
  * ```
  *
- * `variant`, `color` and `size` come from `GorillaVariant`. Every visual value is a
+ * `color` and `size` come from `GorillaVariant`. Every visual value is a
  * `--gorilla-button-*` custom property in `@layer gorilla`, so the app overrides it globally, for a
  * part of the page or for one button without `!important`. Use the native `(click)` event: while
  * the button is disabled no click handler runs, on `<button>` and on `<a>`.
@@ -34,13 +36,13 @@ export type GorillaButtonAppearance = 'filled' | 'tonal' | 'outlined' | 'text';
   styleUrl: './gorilla-button.css',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  hostDirectives: [{ directive: GorillaVariant, inputs: ['variant', 'color', 'size'] }],
+  // `variant` is not forwarded yet: only `default` is styled, and the other variants arrive with
+  // their styles (an input without a visible effect is E-14).
+  hostDirectives: [{ directive: GorillaVariant, inputs: ['color', 'size'] }],
   host: {
     class: 'gorilla-button',
     '[class]': 'appearanceClass()',
     '[attr.disabled]': 'isButton && disabled() ? "" : null',
-    '[attr.aria-disabled]': '!isButton && disabled() ? "true" : authorAriaDisabled',
-    '[attr.tabindex]': '!isButton && disabled() ? "-1" : authorTabIndex',
   },
 })
 export class GorillaButton {
@@ -50,12 +52,6 @@ export class GorillaButton {
   readonly disabled = input(false, { transform: booleanAttribute });
 
   protected readonly isButton: boolean;
-  protected readonly authorTabIndex = inject(new HostAttributeToken('tabindex'), {
-    optional: true,
-  });
-  protected readonly authorAriaDisabled = inject(new HostAttributeToken('aria-disabled'), {
-    optional: true,
-  });
   protected readonly appearanceClass = computed(() => `gorilla-button-${this.appearance()}`);
 
   constructor() {
@@ -72,6 +68,34 @@ export class GorillaButton {
       }
     };
     element.addEventListener('click', blockWhileDisabled, { capture: true });
+
+    // On `<a>`, `disabled` takes over `aria-disabled` and `tabindex`. The author's values are read
+    // right before disabling, so the ones set or bound after creation come back on re-enable.
+    if (!this.isButton) {
+      const renderer = inject(Renderer2);
+      const restore = (name: string, value: string | null) =>
+        value === null
+          ? renderer.removeAttribute(element, name)
+          : renderer.setAttribute(element, name, value);
+      let authorAttributes: { tabindex: string | null; ariaDisabled: string | null } | null = null;
+      effect(() => {
+        const disabled = this.disabled();
+        untracked(() => {
+          if (disabled && !authorAttributes) {
+            authorAttributes = {
+              tabindex: element.getAttribute('tabindex'),
+              ariaDisabled: element.getAttribute('aria-disabled'),
+            };
+            renderer.setAttribute(element, 'aria-disabled', 'true');
+            renderer.setAttribute(element, 'tabindex', '-1');
+          } else if (!disabled && authorAttributes) {
+            restore('tabindex', authorAttributes.tabindex);
+            restore('aria-disabled', authorAttributes.ariaDisabled);
+            authorAttributes = null;
+          }
+        });
+      });
+    }
     inject(DestroyRef).onDestroy(() =>
       element.removeEventListener('click', blockWhileDisabled, { capture: true }),
     );

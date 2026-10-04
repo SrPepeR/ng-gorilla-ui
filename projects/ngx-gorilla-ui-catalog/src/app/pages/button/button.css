@@ -38,3 +38,34 @@ pre {
     background-color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
     border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
 }
+
+.table {
+  overflow-x: auto;
+}
+
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--gorilla-font-size-sm);
+}
+
+th,
+td {
+  padding: var(--gorilla-space-2) var(--gorilla-space-3);
+  border-block-end: 1px solid var(--gorilla-border);
+  text-align: start;
+  vertical-align: top;
+  transition: border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+thead th {
+  color: var(--gorilla-text-muted);
+  font-weight: var(--gorilla-font-weight-medium);
+  transition:
+    color var(--gorilla-duration-normal) var(--gorilla-easing-standard),
+    border-color var(--gorilla-duration-normal) var(--gorilla-easing-standard);
+}
+
+li {
+  margin-block-end: var(--gorilla-space-2);
+}

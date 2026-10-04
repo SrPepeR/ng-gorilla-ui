@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { cdp, userEvent } from 'vitest/browser';
 import tokensCss from '../../styles/tokens.css' with { loader: 'text' };
-import { GorillaColor, GorillaSize, GorillaVariantName } from 'ngx-gorilla-ui/core';
+import { GorillaColor, GorillaSize } from 'ngx-gorilla-ui/core';
 import { GorillaButton, GorillaButtonAppearance } from './gorilla-button';
 
 @Component({
@@ -10,7 +10,6 @@ import { GorillaButton, GorillaButtonAppearance } from './gorilla-button';
   template: `
     <button
       gorilla-button
-      [variant]="variant()"
       [color]="color()"
       [size]="size()"
       [appearance]="appearance()"
@@ -35,7 +34,6 @@ import { GorillaButton, GorillaButtonAppearance } from './gorilla-button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Page {
-  readonly variant = signal<GorillaVariantName>('default');
   readonly color = signal<GorillaColor>('primary');
   readonly size = signal<GorillaSize>('md');
   readonly appearance = signal<GorillaButtonAppearance>('filled');
@@ -76,7 +74,7 @@ describe('GorillaButton', () => {
     expect(button.textContent?.trim()).toBe('Save');
   });
 
-  it('applies `variant`, `color`, `size` and `appearance` classes to the host', async () => {
+  it('applies the `default` variant, `color`, `size` and `appearance` classes to the host', async () => {
     const { fixture, page, button } = await render();
 
     expect([...button.classList]).toEqual(
@@ -153,6 +151,33 @@ describe('GorillaButton', () => {
     await fixture.whenStable();
     expect(link.hasAttribute('aria-disabled')).toBe(false);
     expect(link.hasAttribute('tabindex')).toBe(false);
+  });
+
+  it('on `<a>`, restores the author `tabindex` and `aria-disabled` current at the time of disabling', async () => {
+    const { fixture, page, link } = await render();
+    link.setAttribute('tabindex', '3');
+    link.setAttribute('aria-disabled', 'false');
+
+    page.disabled.set(true);
+    await fixture.whenStable();
+    expect(link.getAttribute('tabindex')).toBe('-1');
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+
+    page.disabled.set(false);
+    await fixture.whenStable();
+    expect(link.getAttribute('tabindex')).toBe('3');
+    expect(link.getAttribute('aria-disabled')).toBe('false');
+  });
+
+  it('reads the hover and press transforms from `--gorilla-button-*-transform`', async () => {
+    const { button } = await render();
+    button.style.setProperty('--gorilla-button-hover-transform', 'translateY(-2px)');
+    button.style.setProperty('--gorilla-button-transition-duration', '0s');
+
+    await userEvent.hover(button);
+    expect(getComputedStyle(button).transform).toBe('matrix(1, 0, 0, 1, 0, -2)');
+    await userEvent.unhover(button);
+    expect(getComputedStyle(button).transform).toBe('none');
   });
 
   it('keeps `type="button"` when given and does not override author attributes (`type`, `aria-*`)', async () => {

@@ -20,7 +20,8 @@ First version of `ngx-gorilla-ui`: the workspace and its tooling (roadmap point 
 - `ngx-gorilla-ui/button`: `GorillaButton` on the native `<button>` and `<a>` elements (`button[gorilla-button]`, `a[gorilla-button]`), with no wrapper:
   - Eight colors, five sizes (`xs` to `xl`), and four appearances (`filled`, `tonal`, `outlined`, `text`), in the `default` variant: slightly rounded corners, bold text, a glow in the role color on filled buttons, and a springy scale on hover and press.
   - `disabled` sets the native attribute on `<button>` and `aria-disabled`, `tabindex="-1"`, and a blocked navigation on `<a>`; no click handler runs while disabled.
-  - Focus ring on keyboard focus only, transitions with the motion tokens, and `--gorilla-button-*` custom properties to override it globally, for a part of the page, or for one button.
+  - Focus ring on keyboard focus only, transitions with the motion tokens, and `--gorilla-button-*` custom properties (hover and press transforms included) to override it globally, for a part of the page, or for one button.
+  - The `variant` input arrives with the other five variants; for now every button uses `default`.
 
 ### Project
 

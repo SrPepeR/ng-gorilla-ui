@@ -61,3 +61,104 @@
     <a gorilla-button href="#" appearance="outlined" disabled>Disabled link</a>
   </div>
 </section>
+
+<section aria-labelledby="api-title">
+  <h2 id="api-title">API</h2>
+  <p>
+    Selector <code>button[gorilla-button], a[gorilla-button]</code>, from
+    <code>ngx-gorilla-ui/button</code>. There are no outputs: use the native
+    <code>(click)</code> event.
+  </p>
+  <div class="table">
+    <table>
+      <caption class="visually-hidden">
+        Inputs of gorilla-button
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Input</th>
+          <th scope="col">Type</th>
+          <th scope="col">Default</th>
+          <th scope="col">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (input of inputs; track input.name) {
+          <tr>
+            <th scope="row">
+              <code>{{ input.name }}</code>
+            </th>
+            <td>
+              <code>{{ input.type }}</code>
+            </td>
+            <td>
+              <code>{{ input.default }}</code>
+            </td>
+            <td>{{ input.description }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section aria-labelledby="tokens-title">
+  <h2 id="tokens-title">Tokens</h2>
+  <p>
+    The button only reads these custom properties, with the defaults below as fallbacks, so setting
+    one on <code>:root</code>, on a container or on a single button wins for every size, color and
+    state, without <code>!important</code>.
+  </p>
+  <div class="table">
+    <table>
+      <caption class="visually-hidden">
+        Custom properties of gorilla-button
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Custom property</th>
+          <th scope="col">Default</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (token of tokens; track token[0]) {
+          <tr>
+            <th scope="row">
+              <code>{{ token[0] }}</code>
+            </th>
+            <td>{{ token[1] }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <pre><code>{{ tokensSnippet }}</code></pre>
+  <p>
+    Global link styles of the app are unlayered, so they beat <code>@layer gorilla</code>: write
+    them as <code>a:not(.gorilla-button)</code> to keep them off the links styled as buttons.
+  </p>
+</section>
+
+<section aria-labelledby="a11y-title">
+  <h2 id="a11y-title">Accessibility</h2>
+  <ul>
+    <li>
+      It is the native element, so it keeps its role, its keyboard behavior (<kbd>Enter</kbd> and
+      <kbd>Space</kbd> on buttons, <kbd>Enter</kbd> on links) and every attribute you set.
+    </li>
+    <li>
+      Give icon-only buttons an <code>aria-label</code>, and <code>type="button"</code> to buttons
+      inside a form that do not submit it.
+    </li>
+    <li>
+      A disabled <code>&lt;a&gt;</code> gets <code>aria-disabled="true"</code> and
+      <code>tabindex="-1"</code>; your own values of those attributes come back when it is enabled.
+    </li>
+    <li>The focus ring only shows on keyboard focus (<code>:focus-visible</code>).</li>
+    <li>
+      Every color pair passes WCAG AA in both themes. With
+      <code>prefers-reduced-motion: reduce</code> the transitions and the hover and press scale are
+      immediate, and with <code>forced-colors: active</code> the system colors draw the button.
+    </li>
+  </ul>
+</section>

@@ -200,7 +200,7 @@
   }
 
   :where(.gorilla-button:hover:not(:disabled, [aria-disabled='true'])) {
-    --_gorilla-button-transform: scale(1.03);
+    --_gorilla-button-transform: var(--gorilla-button-hover-transform, scale(1.03));
   }
 
   :where(.gorilla-button-filled:hover:not(:disabled, [aria-disabled='true'])) {
@@ -219,7 +219,7 @@
   }
 
   :where(.gorilla-button:active:not(:disabled, [aria-disabled='true'])) {
-    --_gorilla-button-transform: scale(0.95);
+    --_gorilla-button-transform: var(--gorilla-button-active-transform, scale(0.95));
   }
 
   :where(.gorilla-button-filled:active:not(:disabled, [aria-disabled='true'])) {

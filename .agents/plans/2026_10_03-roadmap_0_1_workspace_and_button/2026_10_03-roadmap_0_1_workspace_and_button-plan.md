@@ -76,7 +76,7 @@ Sustituir el workspace de `ngx-monkey-ui` por uno nuevo en Angular 22 con la lib
   - `directive GorillaVariant` (selector `[gorillaVariant]`, pensada para `hostDirectives`): inputs `variant` (por defecto `'default'`), `color` (por defecto `'primary'`), `size` (por defecto `'md'`); enlaza al host las clases `gorilla-variant-<variant>`, `gorilla-color-<color>` y `gorilla-size-<size>` con un `computed()`.
 - `ngx-gorilla-ui/button`:
   - `type GorillaButtonAppearance = 'filled' | 'tonal' | 'outlined' | 'text'`.
-  - `component GorillaButton`, selector `button[gorilla-button], a[gorilla-button]`, `OnPush`, `hostDirectives: [{ directive: GorillaVariant, inputs: ['variant', 'color', 'size'] }]`.
+  - `component GorillaButton`, selector `button[gorilla-button], a[gorilla-button]`, `OnPush`, `hostDirectives: [{ directive: GorillaVariant, inputs: ['variant', 'color', 'size'] }]` (`variant` se reenvía en la fase 5, cuando las otras variantes tienen estilos; hasta entonces solo `color` y `size`, por el E-14).
     - Inputs: `appearance: GorillaButtonAppearance` (por defecto `'filled'`) y `disabled: boolean` (`booleanAttribute`, por defecto `false`).
     - En `<button>`: refleja `disabled` en el atributo nativo. En `<a>`: pone `aria-disabled="true"`, `tabindex="-1"` y anula la navegación y los clics mientras está deshabilitado.
     - Sin outputs propios: se usa el `(click)` nativo.
@@ -88,7 +88,7 @@ Sustituir el workspace de `ngx-monkey-ui` por uno nuevo en Angular 22 con la lib
 - Superficies, texto, bordes e interacción: `--gorilla-background`, `--gorilla-surface`, `--gorilla-surface-raised`, `--gorilla-surface-overlay`, `--gorilla-scrim`, `--gorilla-text`, `--gorilla-text-muted`, `--gorilla-text-disabled`, `--gorilla-text-inverse`, `--gorilla-border`, `--gorilla-border-strong`, `--gorilla-border-disabled`, `--gorilla-focus-ring` y `--gorilla-selection`.
 - Escalas: `--gorilla-space-<n>`, `--gorilla-radius-<xs…xl|full>`, `--gorilla-shadow-<1…4>`, `--gorilla-font-family`, `--gorilla-font-size-<xs…xl>`, `--gorilla-font-weight-<regular|medium|bold>`, `--gorilla-line-height-<tight|normal>`, `--gorilla-control-height-<xs…xl>`.
 - Movimiento: `--gorilla-duration-<fast|normal|slow>` y `--gorilla-easing-<standard|emphasized|spring>`; con `prefers-reduced-motion: reduce` las duraciones valen `0s`.
-- Botón: `--gorilla-button-height`, `--gorilla-button-padding-inline`, `--gorilla-button-radius`, `--gorilla-button-gap`, `--gorilla-button-font-size`, `--gorilla-button-font-weight`, `--gorilla-button-background`, `--gorilla-button-color`, `--gorilla-button-border-color`, `--gorilla-button-border-width`, `--gorilla-button-shadow`, `--gorilla-button-transition-duration`.
+- Botón: `--gorilla-button-height`, `--gorilla-button-padding-inline`, `--gorilla-button-radius`, `--gorilla-button-gap`, `--gorilla-button-font-size`, `--gorilla-button-font-weight`, `--gorilla-button-background`, `--gorilla-button-color`, `--gorilla-button-border-color`, `--gorilla-button-border-width`, `--gorilla-button-shadow`, `--gorilla-button-hover-transform`, `--gorilla-button-active-transform`, `--gorilla-button-transition-duration`.
 
 ### Suites de tests
 
@@ -209,6 +209,7 @@ La directiva `GorillaVariant` y el botón completo en la variante `default`: och
 Añade `brutalist`, `glass`, `material`, `minimal` y `swift` al botón, cada una con su forma, elevación, bordes y movimiento, leyendo los mismos tokens de color.
 
 - [ ] Crear la rama `feat/button-variants` desde `release/0.1.0`.
+- [ ] Reenviar el input `variant` en los `hostDirectives` de `GorillaButton` y documentarlo en la página `Button`.
 - [ ] `brutalist`: bordes gruesos, sombra sólida desplazada sin desenfoque, esquinas rectas, negrita (partiendo del legacy: 2 px y 8 px), con la sombra que se recoge al pulsar.
 - [ ] `glass`: fondo translúcido con `backdrop-filter` (partiendo de `blur(30px)` y radio 15 px), borde fino claro, y fondo opaco de respaldo con `@supports not (backdrop-filter: blur(1px))` y con `prefers-reduced-transparency: reduce`.
 - [ ] `material`: forma de Material 3 Expressive (píldora que se cuadra al pulsar), capa de estado con opacidad para hover, foco y pulsación, elevación tonal y curva de muelle.
