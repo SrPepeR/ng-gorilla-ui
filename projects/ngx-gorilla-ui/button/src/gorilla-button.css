@@ -40,11 +40,15 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     transform: var(--_gorilla-button-transform, none);
+    /* Every visual change animates, size and appearance changes included. */
     transition-property:
-      background-color, color, border-color, box-shadow, outline-color, transform;
+      background-color, color, border-color, border-width, box-shadow, outline-color,
+      min-block-size, padding-inline, font-size, transform;
     transition-duration: var(--gorilla-button-transition-duration, var(--gorilla-duration-normal));
-    /* Colors ease in; the scale on hover and press springs. */
+    /* Everything eases in, and the scale on hover and press springs. */
     transition-timing-function:
+      var(--gorilla-easing-standard), var(--gorilla-easing-standard),
+      var(--gorilla-easing-standard), var(--gorilla-easing-standard),
       var(--gorilla-easing-standard), var(--gorilla-easing-standard),
       var(--gorilla-easing-standard), var(--gorilla-easing-standard),
       var(--gorilla-easing-standard), var(--gorilla-easing-spring);

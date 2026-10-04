@@ -194,6 +194,20 @@ describe('GorillaButton', () => {
     await fixture.whenStable();
     expect(link.getAttribute('tabindex')).toBe('5');
     expect(link.getAttribute('aria-disabled')).toBe('false');
+
+    // An author value equal to the disabled one is still the author's.
+    page.linkTabIndex.set('2');
+    await fixture.whenStable();
+    page.disabled.set(true);
+    await fixture.whenStable();
+    page.linkTabIndex.set('-1');
+    page.linkAriaDisabled.set('true');
+    await fixture.whenStable();
+    await Promise.resolve();
+    page.disabled.set(false);
+    await fixture.whenStable();
+    expect(link.getAttribute('tabindex')).toBe('-1');
+    expect(link.getAttribute('aria-disabled')).toBe('true');
   });
 
   it('reads the hover and press transforms from `--gorilla-button-*-transform`', async () => {
@@ -253,7 +267,17 @@ describe('GorillaButton', () => {
       .map((property) => property.trim());
 
     expect(properties).toEqual(
-      expect.arrayContaining(['background-color', 'color', 'border-color', 'box-shadow']),
+      expect.arrayContaining([
+        'background-color',
+        'color',
+        'border-color',
+        'border-width',
+        'box-shadow',
+        'min-block-size',
+        'padding-inline',
+        'font-size',
+        'transform',
+      ]),
     );
     expect(getComputedStyle(button).transitionDuration).not.toBe('0s');
 

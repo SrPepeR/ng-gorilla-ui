@@ -79,30 +79,43 @@ export class GorillaButton {
         ? renderer.removeAttribute(element, name)
         : renderer.setAttribute(element, name, value);
     // Watches the author's writes while disabled; there is no `MutationObserver` on the server.
-    const keepOwned = (records: MutationRecord[]) => {
+    // The observer is off during our own writes, so every record it gets is an author write, even
+    // one that sets the same value as ours.
+    const options: MutationObserverInit = { attributeFilter: Object.keys(owned) };
+    const keepAuthorWrites = (records: MutationRecord[]) => {
       for (const { attributeName } of records) {
-        const value = attributeName && element.getAttribute(attributeName);
-        if (attributeName && value !== owned[attributeName]) {
-          authorValues.set(attributeName, value ?? null);
-          write(attributeName, owned[attributeName]);
+        if (attributeName) {
+          authorValues.set(attributeName, element.getAttribute(attributeName));
         }
       }
     };
     const observer =
-      typeof MutationObserver === 'undefined' ? null : new MutationObserver(keepOwned);
+      typeof MutationObserver === 'undefined'
+        ? null
+        : new MutationObserver((records) => {
+            observer?.disconnect();
+            keepAuthorWrites(records);
+            for (const name of Object.keys(owned)) {
+              write(name, owned[name]);
+            }
+            observer?.observe(element, options);
+          });
+    let disabledLink = false;
 
     if (!this.isButton) {
       effect(() => {
         const disabled = this.disabled();
         untracked(() => {
-          if (disabled && authorValues.size === 0) {
+          if (disabled && !disabledLink) {
+            disabledLink = true;
             for (const name of Object.keys(owned)) {
               authorValues.set(name, element.getAttribute(name));
               write(name, owned[name]);
             }
-            observer?.observe(element, { attributeFilter: Object.keys(owned) });
-          } else if (!disabled && authorValues.size > 0) {
-            keepOwned(observer?.takeRecords() ?? []);
+            observer?.observe(element, options);
+          } else if (!disabled && disabledLink) {
+            disabledLink = false;
+            keepAuthorWrites(observer?.takeRecords() ?? []);
             observer?.disconnect();
             authorValues.forEach((value, name) => write(name, value));
             authorValues.clear();
