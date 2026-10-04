@@ -1,4 +1,5 @@
 import {
+  AfterViewChecked,
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
@@ -45,7 +46,7 @@ export type GorillaButtonAppearance = 'filled' | 'tonal' | 'outlined' | 'text';
     '[attr.disabled]': 'isButton && disabled() ? "" : null',
   },
 })
-export class GorillaButton {
+export class GorillaButton implements AfterViewChecked {
   /** Emphasis: `filled` (default), `tonal`, `outlined` or `text`. */
   readonly appearance = input<GorillaButtonAppearance>('filled');
   /**
@@ -56,6 +57,8 @@ export class GorillaButton {
 
   protected readonly isButton: boolean;
   protected readonly appearanceClass = computed(() => `gorilla-button-${this.appearance()}`);
+  /** Takes back the attributes of a disabled `<a>` after a render pass changed them. */
+  private syncDisabledLink: (() => void) | null = null;
 
   constructor() {
     const element: HTMLElement = inject(ElementRef).nativeElement;
@@ -83,6 +86,14 @@ export class GorillaButton {
   }
 
   /**
+   * Runs after every render pass of the parent, also on the server, so author bindings that
+   * changed a disabled link's attributes are caught even where there is no `MutationObserver`.
+   */
+  ngAfterViewChecked(): void {
+    this.syncDisabledLink?.();
+  }
+
+  /**
    * Swaps the author's attributes of an `<a>` for the disabled ones and back.
    *
    * Without `href` nothing can navigate (middle click, context menu, `Enter`), and `role="link"`
@@ -91,7 +102,8 @@ export class GorillaButton {
    * The author's values also live in `data-gorilla-author` while disabled, so a link rendered
    * disabled on the server finds them on hydration instead of reading the disabled ones. Returns
    * the observer of the author's writes, `null` on the server, where there is no
-   * `MutationObserver`.
+   * `MutationObserver`; there, `ngAfterViewChecked` catches the author's writes after each render
+   * pass (the observer also catches a write of the same value as the disabled one).
    */
   private manageDisabledLink(element: HTMLElement): MutationObserver | null {
     const owned: Record<string, string | null> = {
@@ -133,6 +145,24 @@ export class GorillaButton {
             observer?.observe(element, options);
           });
     let disabledLink = false;
+    this.syncDisabledLink = () => {
+      if (!disabledLink) {
+        return;
+      }
+      let changed = false;
+      for (const name of Object.keys(owned)) {
+        const value = element.getAttribute(name);
+        if (value !== owned[name]) {
+          authorValues.set(name, value);
+          changed = true;
+        }
+      }
+      if (changed) {
+        observer?.disconnect();
+        writeOwned();
+        observer?.observe(element, options);
+      }
+    };
 
     effect(() => {
       const disabled = this.disabled();

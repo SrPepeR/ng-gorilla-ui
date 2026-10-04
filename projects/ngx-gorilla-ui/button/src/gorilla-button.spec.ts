@@ -231,6 +231,31 @@ describe('GorillaButton', () => {
     expect(link.getAttribute('aria-disabled')).toBe('true');
   });
 
+  it('on `<a>`, takes back the attributes changed by author bindings while disabled without `MutationObserver` (server)', async () => {
+    vi.stubGlobal('MutationObserver', undefined);
+    onTestFinished(() => {
+      vi.unstubAllGlobals();
+    });
+    const { fixture, page, link } = await render();
+    page.disabled.set(true);
+    await fixture.whenStable();
+
+    page.linkTabIndex.set('7');
+    page.linkAriaDisabled.set('false');
+    await fixture.whenStable();
+    expect(link.getAttribute('tabindex')).toBe('-1');
+    expect(link.getAttribute('aria-disabled')).toBe('true');
+    expect(JSON.parse(link.getAttribute('data-gorilla-author') ?? '')).toMatchObject({
+      tabindex: '7',
+      'aria-disabled': 'false',
+    });
+
+    page.disabled.set(false);
+    await fixture.whenStable();
+    expect(link.getAttribute('tabindex')).toBe('7');
+    expect(link.getAttribute('aria-disabled')).toBe('false');
+  });
+
   it('on `<a>`, keeps the author values through the server render and the hydration of a disabled link', () => {
     const environmentInjector = TestBed.inject(EnvironmentInjector);
     const appRef = TestBed.inject(ApplicationRef);
