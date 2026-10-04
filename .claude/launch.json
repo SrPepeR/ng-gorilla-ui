@@ -3,8 +3,11 @@
   "configurations": [
     {
       "name": "start",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start"],
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "if [ -s \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" ]; then . \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use; fi; exec npm run start"
+      ],
       "port": 4200
     }
   ]
