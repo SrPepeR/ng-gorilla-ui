@@ -203,37 +203,37 @@
     --_gorilla-button-shadow: 0 0 transparent;
   }
 
-  :where(.gorilla-button:hover:not(:disabled, [aria-disabled='true'])) {
+  :where(.gorilla-button:hover:not(:disabled, .gorilla-button-disabled)) {
     --_gorilla-button-transform: var(--gorilla-button-hover-transform, scale(1.03));
   }
 
-  :where(.gorilla-button-filled:hover:not(:disabled, [aria-disabled='true'])) {
+  :where(.gorilla-button-filled:hover:not(:disabled, .gorilla-button-disabled)) {
     --_gorilla-button-background: var(--_gorilla-button-solid-hover);
   }
 
-  :where(.gorilla-button-tonal:hover:not(:disabled, [aria-disabled='true'])) {
+  :where(.gorilla-button-tonal:hover:not(:disabled, .gorilla-button-disabled)) {
     --_gorilla-button-background: var(--_gorilla-button-subtle-hover);
   }
 
   :where(
-    .gorilla-button-outlined:hover:not(:disabled, [aria-disabled='true']),
-    .gorilla-button-text:hover:not(:disabled, [aria-disabled='true'])
+    .gorilla-button-outlined:hover:not(:disabled, .gorilla-button-disabled),
+    .gorilla-button-text:hover:not(:disabled, .gorilla-button-disabled)
   ) {
     --_gorilla-button-background: var(--_gorilla-button-subtle);
   }
 
-  :where(.gorilla-button:active:not(:disabled, [aria-disabled='true'])) {
+  :where(.gorilla-button:active:not(:disabled, .gorilla-button-disabled)) {
     --_gorilla-button-transform: var(--gorilla-button-active-transform, scale(0.95));
   }
 
-  :where(.gorilla-button-filled:active:not(:disabled, [aria-disabled='true'])) {
+  :where(.gorilla-button-filled:active:not(:disabled, .gorilla-button-disabled)) {
     --_gorilla-button-background: var(--_gorilla-button-solid-active);
   }
 
   :where(
-    .gorilla-button-tonal:active:not(:disabled, [aria-disabled='true']),
-    .gorilla-button-outlined:active:not(:disabled, [aria-disabled='true']),
-    .gorilla-button-text:active:not(:disabled, [aria-disabled='true'])
+    .gorilla-button-tonal:active:not(:disabled, .gorilla-button-disabled),
+    .gorilla-button-outlined:active:not(:disabled, .gorilla-button-disabled),
+    .gorilla-button-text:active:not(:disabled, .gorilla-button-disabled)
   ) {
     --_gorilla-button-background: var(--_gorilla-button-subtle-hover);
   }
@@ -243,8 +243,8 @@
     outline-color: var(--gorilla-focus-ring);
   }
 
-  /* Disabled, on `<button disabled>` and `<a aria-disabled="true">`. */
-  :where(.gorilla-button:disabled, .gorilla-button[aria-disabled='true']) {
+  /* Disabled by the `disabled` input, on `<button>` and on `<a>`. */
+  :where(.gorilla-button:disabled, .gorilla-button.gorilla-button-disabled) {
     --_gorilla-button-color: var(--gorilla-text-disabled);
     --_gorilla-button-shadow: 0 0 transparent;
     cursor: not-allowed;
@@ -252,14 +252,14 @@
 
   :where(
     .gorilla-button-filled:disabled,
-    .gorilla-button-filled[aria-disabled='true'],
+    .gorilla-button-filled.gorilla-button-disabled,
     .gorilla-button-tonal:disabled,
-    .gorilla-button-tonal[aria-disabled='true']
+    .gorilla-button-tonal.gorilla-button-disabled
   ) {
     --_gorilla-button-background: var(--gorilla-neutral-subtle);
   }
 
-  :where(.gorilla-button-outlined:disabled, .gorilla-button-outlined[aria-disabled='true']) {
+  :where(.gorilla-button-outlined:disabled, .gorilla-button-outlined.gorilla-button-disabled) {
     --_gorilla-button-border-color: var(--gorilla-border-disabled);
   }
 
@@ -283,7 +283,7 @@
     }
 
     /* A disabled `<a>` would keep the link color: draw every disabled button in `GrayText`. */
-    :where(.gorilla-button:disabled, .gorilla-button[aria-disabled='true']) {
+    :where(.gorilla-button:disabled, .gorilla-button.gorilla-button-disabled) {
       forced-color-adjust: none;
       background-color: Canvas;
       border-color: GrayText;

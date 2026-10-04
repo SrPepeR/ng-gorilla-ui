@@ -155,6 +155,7 @@ describe('GorillaButton', () => {
     await fixture.whenStable();
     expect(link.hasAttribute('href')).toBe(false);
     expect(link.getAttribute('role')).toBe('link');
+    expect(link.classList).toContain('gorilla-button-disabled');
     expect(link.getAttribute('aria-disabled')).toBe('true');
     expect(link.getAttribute('tabindex')).toBe('-1');
     expect(JSON.parse(link.getAttribute('data-gorilla-author') ?? '')).toEqual({
@@ -229,6 +230,9 @@ describe('GorillaButton', () => {
     await fixture.whenStable();
     expect(link.getAttribute('tabindex')).toBe('-1');
     expect(link.getAttribute('aria-disabled')).toBe('true');
+    // The author's `aria-disabled` does not bring back the disabled look: it follows the input.
+    expect(link.classList).not.toContain('gorilla-button-disabled');
+    expect(getComputedStyle(link).cursor).toBe('pointer');
   });
 
   it('on `<a>`, takes back the attributes changed by author bindings while disabled without `MutationObserver` (server)', async () => {

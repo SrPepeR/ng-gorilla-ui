@@ -44,6 +44,8 @@ export type GorillaButtonAppearance = 'filled' | 'tonal' | 'outlined' | 'text';
     class: 'gorilla-button',
     '[class]': 'appearanceClass()',
     '[attr.disabled]': 'isButton && disabled() ? "" : null',
+    // The disabled look follows the input only, not an `aria-disabled` the author restores.
+    '[class.gorilla-button-disabled]': 'disabled()',
   },
 })
 export class GorillaButton implements AfterViewChecked {
